@@ -4,11 +4,57 @@
 % be included directly in the main document.
 
 
-% Packages and macros go here
 \usepackage{amsfonts}
 \usepackage{graphicx}
 \usepackage{epstopdf}
 \usepackage{algorithmic}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+%\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{tikz}
+%\usetikzlibrary{arrows.meta}
+\usetikzlibrary {positioning}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{qtree}
+\usepackage[square]{natbib}
+\setlength{\bibsep}{0.0pt}
+\usepackage{sidecap}
+\usepackage[toc,page]{appendix}
+\usepackage{color}
+\usepackage{float}
+\usepackage{pdfpages}
+
+\mathchardef\mhyphen="2D 
+
+\newcommand{\imagePath}{/home/pankaj/SubmodularInference/pairwise/data/output}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+\usepackage{titlesec}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\newcommand{\mysection}[1]{\vspace{-2mm}\section{#1}\vspace{-2mm}}
+\newcommand{\mysubsection}[1]{\vspace{-1mm}\subsection{#1}\vspace{-1mm}}
+\newcommand{\mysubsubsection}[1]{\vspace{0mm}\subsubsection{#1} ~\\ \vspace{-2mm}}
+\newcommand{\myparagraph}[1]{\vspace{-2mm}\paragraph{#1}}
+\newcommand{\mycaption}[1]{\vspace{0mm}\caption{#1}\vspace{0mm}}
+
+% Packages and macros go here
 \ifpdf
   \DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
 \else
@@ -25,6 +71,12 @@
 
 % Used for creating new theorem and remark environments
 \newsiamremark{remark}{Remark}
+\newsiamremark{mydef}{Definition}
+\newsiamremark{prop}{Property}
+%\newsiamremark{theorem}{Theorem}
+%\newsiamremark{lemma}{Lemma}
+%\newsiamremark{proposition}{Proposition}
+%\newsiamremark{corollary}{Corollary}
 \newsiamremark{hypothesis}{Hypothesis}
 \crefname{hypothesis}{Hypothesis}{Hypotheses}
 \newsiamthm{claim}{Claim}
