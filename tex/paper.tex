@@ -478,6 +478,33 @@ shown to clump together 4 and 5 leaf nodes for tree A and B respectively.}
 \label{fig:syn_rhst}
 \end{figure}
 
+\mysection{Higher-order Potts Model} The pairwise Potts model often fails
+to capture useful image statistics because it restricts the order of the
+potentials to be at most two. Higher order clique potentials can model complex
+interactions of random variables, and thereby overcome this difficulty.
+
+The simplest generalisation of pairwise Potts model to higher-order results in
+\textit{higher-order Potts model}. The clique potentials for these models are
+defined as
+
+\begin{equation}
+  \phi_c({\bf x}_c) = 
+  \begin{cases}
+    \gamma_0, &{\text{if}} \; \forall i, j \in c: x_i = x_j, \\
+    \gamma_1, &{\text{else}}. 
+  \end{cases} 
+\end{equation}
+
+\myparagraph{LP Relaxation}
+\begin{align}
+    \text{(HOP-LP)} \quad \min_{\bf y} \enskip & E({\bf y}) =  \sum_{a = 1}^N
+    \sum_{i = 1}^L \phi_a(i)y_{ai} + \nonumber\\
+    &\sum_{c \in {\mathcal C}} \max_{(a, b) \in c} \frac{w_c}{2} \sum_{i = 1}^L \cdot |y_{ai} - y_{bi}| \nonumber\\
+    \text{s.t} \quad &{\bf y} \in \Delta.
+\label{eq:hop-lp}
+\end{align}
+The constraints for (HOP-LP) are the same as for (P-LP).
+
 \mysection{Fast Conditional Gradient Computation for Dense CRFs}
 \label{sec:dense_crf}
 
