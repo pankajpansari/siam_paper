@@ -383,12 +383,30 @@ A subtree $T$ of an hierarchical Potts model is a tree comprising all the descen
     \text{such that} \quad &{\bf y} \in \Delta.
 \label{eq:t-lp}
 \end{align}
-The set $\Delta$ is the same domain as defined in equation (\ref{eq:delta}). We
-rewrite this LP relaxation using indicator variables $z_{ai}$ for all labels
-and meta-labels as
+The set $\Delta$ is the same domain as defined in equation (\ref{eq:delta}). 
+
+\myparagraph{Transformed Tightest LP Relaxation} We take (T-LP) and rewrite it using indicator variables for all labels and meta-labels. Let $\mathcal R$ denote the set of all labels and meta-labels, that is, all nodes in the tree apart from the root. Also, let $\mathcal L$ denote the set of labels, that is, the leaves of the tree. Let $T_i$ denote the subtree which is rooted at the $i$-th node. We introduce an indicator variable $z_{ai} \in \{0, 1\}$, where
 \begin{align}
-    \text{(T-LP-FULL)} &\quad \min \widetilde{E}({\bf z}) \nonumber \\
-    {} &\text{such that} \quad {\bf z} \in \Delta'
+    \enskip  z_{ai} =  \begin{cases} 
+        y_{ai} \quad &\text{if} \enskip i \in {\mathcal L} \\
+        y_{a}(T_i) \quad &\text{if} \enskip i \in {\mathcal R - \mathcal L} \\
+    \end{cases}
+\end{align}
+
+We need to extend the definition of unary potentials to the expanded label space as follows:
+\begin{align}
+    \text{where} \enskip    \phi'_{a}(i) =  \begin{cases} 
+        \phi_{a}(i) \quad &\text{if} \enskip i \in {\mathcal L} \\
+        0  \quad &\text{if} \enskip i \in {\mathcal R - L} \\
+    \end{cases}
+\end{align}
+%
+We can now rewrite problem \eqref{eq:t-lp} in terms of new indicator variables $z_{ai}$:
+%
+\begin{align}
+    \text{(T-LP-FULL)} \quad &\min \widetilde{E}({\bf z}) = \sum_{i \in \mathcal{R}} \sum_{a \in {\mathcal X}} \phi_a'(i) \cdot z_{ai} + \nonumber \\
+            &\sum_{i \in \mathcal{R}} \sum_{(a, b) \in {\mathcal N}} w_{ab} \cdot l_{T_i} \cdot |z_{ai} - z_{bi}| \nonumber \\
+    \text{such that} \quad {\bf z} \in \Delta'
 \label{eq:t-lp-full}
 \end{align}
    where $\Delta'$ is the convex hull of the vectors satisfying
@@ -396,7 +414,8 @@ and meta-labels as
     \enskip &\sum_{i \in \mathcal{L}} z_{ai} = 1, \enskip z_{ai} \in \{0, 1\} \enskip \forall a \in {\mathcal X}, i \in \mathcal{L} \\
     \text{and} \enskip &z_{ai} = \sum_{j \in L(T_i) } z_{aj}.\enskip \forall a \in {\mathcal X}, i \in \mathcal{R - L} \label{eq:consistency_constraint} 
 \end{align}
-The details of the new relaxation (T-LP-FULL) can be found in the appendix.
+%
+Constraint (\ref{eq:consistency_constraint}) ensures consistency among labels and meta-labels, that is, if a label is assigned then all the meta-labels which lie on the path from the root to the label should be assigned as well. 
 %
 \myparagraph{Set Encoding} For any variable $X_a$, let the set of possible assignment of labels and meta-labels be the set $V_a = \{v_{a1}, \dots, v_{aM}\}$, where $M$ is the total number of nodes in the tree except the root. Our ground set is $V = \cup_{a = 1}^{N} V_a$ of size $N \cdot M$.
 
