@@ -514,7 +514,7 @@ scheme as for Potts model. In a similar way, problem can be rewritten as
 \label{eq:hop_upper_bound}
 \end{equation}
 
-Introducing a temperature parameter $T$ to problem (), 
+Introducing a temperature parameter $T$ to problem (\ref{eq:hop_upper_bound}), 
 
 %Same as eq 5.5
 \begin{equation}
@@ -522,7 +522,7 @@ Introducing a temperature parameter $T$ to problem (),
 \label{eq:hop_temp}
 \end{equation}
 
-and considering the limit $T \to 0$, problem () becomes
+and considering the limit $T \to 0$, problem (\ref{eq:hop_temp}) becomes
 
 %Same as eq 5.6
 \begin{align}
@@ -601,21 +601,23 @@ Ajanthan et al. \citep{ajanthan2017efficient}, which provides an efficient filte
 \vspace{-0.5cm}
 {\proposition Computing the subgradient of $E({\bf y})$ in (P-LP) is equivalent to computing the conditional gradient for the submodular function $F_{Potts}$. \label{proposition:subgrad}} 
 \newline(Proof in appendix).
-%\begin{proof}
-%From lemma \ref{lemma:lovasz_lp}, 
-%\begin{align}
-%    E({\bf y}) &= f({\bf y})  \nonumber \\
-%    {} &=  \max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle.\nonumber
-%\end{align}
-%
-%The subdifferential of $E({\bf y})$ at $\bf y_0$ is the `active' linear function at $\bf y_0$. Hence,
-%\begin{align}
-%    \partial E({\bf y})|_{\bf y = y_0} &=  \argmax_{{\bf s} \in EP(F)} \langle {\bf y_0}, {\bf s} \rangle
-%    \label{eq:subgrad}
-%\end{align}
-%Equation (\ref{eq:subgrad}) is equivalent to ${\bf s}^*$ computation in line \ref{line:cond_grad} of algorithm \ref{algo:fw_inference}, with ${\bf y_0} = - \nabla g({\bf s}_k)$.
-%\end{proof}
-%
+\begin{proof}
+  For the Potts model, we derived the worst-case optimal extension $F_{Potts}$ by
+  making its Lovasz extension $f({\bf y})$ same as the objective function
+    $E({\bf y})$ of the worst-case optimal LP relaxation. Hence, we have
+\begin{align}
+    E({\bf y}) &= f({\bf y})  \nonumber \\
+    {} &=  \max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle.\nonumber
+\end{align}
+
+The subdifferential of $E({\bf y})$ at $\bf y_0$ is the `active' linear function at $\bf y_0$. Hence,
+\begin{align}
+    \partial E({\bf y})|_{\bf y = y_0} &=  \argmax_{{\bf s} \in EP(F)} \langle {\bf y_0}, {\bf s} \rangle
+    \label{eq:subgrad}
+\end{align}
+Equation (\ref{eq:subgrad}) is equivalent to ${\bf s}^*$ computation in line \ref{line:cond_grad} of algorithm \ref{algo:fw_inference}, with ${\bf y_0} = - \nabla g({\bf s}_k)$.
+\end{proof}
+
 
 \begin{figure}
 \centering
