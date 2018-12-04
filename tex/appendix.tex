@@ -43,38 +43,6 @@ With objective as maximum of linear functions and domain as a polytope, we have 
 \end{proof}
 
 \mysection{Proofs for Hierarchical Potts Model Extension} 
-\myparagraph{Transformed Tightest LP Relaxation} We take (T-LP) and rewrite it using indicator variables for all labels and meta-labels. Let $\mathcal R$ denote the set of all labels and meta-labels, that is, all nodes in the tree apart from the root. Also, let $\mathcal L$ denote the set of labels, that is, the leaves of the tree. Let $T_i$ denote the subtree which is rooted at the $i$-th node. We introduce an indicator variable $z_{ai} \in \{0, 1\}$, where
-\begin{align}
-    \enskip  z_{ai} =  \begin{cases} 
-        y_{ai} \quad &\text{if} \enskip i \in {\mathcal L} \\
-        y_{a}(T_i) \quad &\text{if} \enskip i \in {\mathcal R - \mathcal L} \\
-    \end{cases}
-\end{align}
-
-We need to extend the definition of unary potentials to the expanded label space as follows:
-\begin{align}
-    \text{where} \enskip    \phi'_{a}(i) =  \begin{cases} 
-        \phi_{a}(i) \quad &\text{if} \enskip i \in {\mathcal L} \\
-        0  \quad &\text{if} \enskip i \in {\mathcal R - L} \\
-    \end{cases}
-\end{align}
-%
-We can now rewrite problem \eqref{eq:t-lp} in terms of new indicator variables $z_{ai}$:
-%
-\begin{align}
-    \text{(T-LP-FULL)} \quad &\min \widetilde{E}({\bf z}) = \sum_{i \in \mathcal{R}} \sum_{a \in {\mathcal X}} \phi_a'(i) \cdot z_{ai} + \nonumber \\
-            &\sum_{i \in \mathcal{R}} \sum_{(a, b) \in {\mathcal N}} w_{ab} \cdot l_{T_i} \cdot |z_{ai} - z_{bi}| \nonumber \\
-    \text{such that} \quad {\bf z} \in \Delta'
-%\label{eq:t-lp-full}
-\end{align}
-   where $\Delta'$ is the convex hull of the vectors satisfying
-\begin{align}
-    \enskip &\sum_{i \in \mathcal{L}} z_{ai} = 1, \enskip z_{ai} \in \{0, 1\} \enskip \forall a \in {\mathcal X}, i \in \mathcal{L} \\
-    \text{and} \enskip &z_{ai} = \sum_{j \in L(T_i) } z_{aj}.\enskip \forall a \in {\mathcal X}, i \in \mathcal{R - L} %\label{eq:consistency_constraint} 
-\end{align}
-%
-Constraint (\ref{eq:consistency_constraint}) ensures consistency among labels and meta-labels, that is, if a label is assigned then all the meta-labels which lie on the path from the root to the label should be assigned as well. We are now going to identify a suitable set encoding and the worst-case optimal submodular extension using (T-LP-FULL).
-
 
 {\lemma Given any submodular extension $F(.)$ of an hierachical Potts energy function $E(.)$, its Lovasz extension $f(.)$ defines an LP relaxation of the corresponding MAP estimation problem as
 \begin{align}
@@ -116,7 +84,7 @@ In vector form, the problem becomes
 \begin{align}
     &\min_{{\bf s} \in EP(F)} \max_{{\bf z} \in \Delta} - \langle {\bf z}, {\bf s'} \rangle \\
     & = - \max_{{\bf s} \in EP(F)} \min_{{\bf z} \in \Delta} \langle {\bf z}, {\bf s'} \rangle
-    %\label{eq:metric_maxmin}
+    \label{eq:metric_maxmin}
 \end{align}
 \begin{equation}
     \text{where } \Delta = \{{\bf z}_a \in \mathbb{R}^L | {\bf z}_a \succeq 0  \textrm{ and } \langle {\bf 1}, {\bf z}_a \rangle = 1\}
@@ -157,7 +125,8 @@ Recall that $\max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle$ is the v
 \end{align}
 %\label{proposition:rhst_optimal}}
 \begin{proof}
-    We observe that $F_{r-\textrm{HST}}$ is of exactly the same form as $F_{Potts}$, except that the Ising models $F_i$ are defined over not just labels, but meta-labels as well. Using the same logic as in the proof of proposition \ref{proposition:a-potts_optimal}, each $F_i$ is the Lovasz extension of 
+    We observe that $F_{r-\textrm{HST}}$ is of exactly the same form as
+    $F_{Potts}$, except that the Ising models $F_i$ are defined over not just labels, but meta-labels as well. Using the same logic as in the proof of Potts extension, each $F_i$ is the Lovasz extension of 
         \begin{equation}
             \widetilde{E}_i({\bf z}) = \left( \sum_{a \in {\mathcal X}} \phi_a'(i) \cdot z_{ai} + \sum_{(a, b) \in {\mathcal N}} w_{ab} \cdot l_{T_i} \cdot |z_{ai} - z_{bi}| \right)
         \end{equation}
