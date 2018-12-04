@@ -505,6 +505,71 @@ defined as
 \end{align}
 The constraints for (HOP-LP) are the same as for (P-LP).
 
+\myparagraph{LP-based Submodular Extension} We use the same $1-of-L$ encoding
+scheme as for Potts model. In a similar way, problem can be rewritten as
+
+%Same as eq 5.4
+\begin{equation}
+\min_{{\bf s} \in EP(F)} \quad \sum_{a = 1}^{N} \log \sum_{i = 1}^L \exp(-s_{ai}).
+\label{eq:hop_upper_bound}
+\end{equation}
+
+Introducing a temperature parameter $T$ to problem (), 
+
+%Same as eq 5.5
+\begin{equation}
+    \min_{{\bf s} \in EP(F)} \quad g_T ({\bf s}) = \sum_{a = 1}^{N} T \cdot \log \sum_{i = 1}^L \exp(-\frac{s_{ai}}{T}).
+\label{eq:hop_temp}
+\end{equation}
+
+and considering the limit $T \to 0$, problem () becomes
+
+%Same as eq 5.6
+\begin{align}
+    - \min_{{\bf y} \in \Delta} f({\bf y}) 
+\end{align}
+where $f(.)$ is the Lovasz extension of $F(.)$. We are interested in making
+this LP same as the (), thereby enabling us to recover the submodular extension
+for higher-order Potts. The following proposition gives us the submodular
+extension.
+{\proposition The Lovasz extension of the following submodular extension for
+  higher-order Potts model:
+  \begin{align}
+      F_{HOPotts}(A) &= \sum_a \sum_i \phi_{a}(i) [|A \cap \{v_{ai}\}| = 1] + \nonumber \\
+        &\sum_{c \in {\mathcal C}} \max_{(a, b) \in c} \frac{w_c}{2} \sum_{i = 1}^L [|A \cap \{v_{ai}, v_{bi}\}| = 1]
+\end{align}
+is the objective function $E({\bf y})$ of the LP relaxation (HOP-LP).
+\label{proposition:hop_extension}}
+\begin{proof}
+  We first observe that $\forall {\bf y} \in {\mathcal L}^N$, that is, for all
+  valid labelings, $F_{HOPotts}(A_{\bf y})$ equals $E({\bf y}$.  Hence, $F_{HOPotts}$
+    is an extension. 
+
+Consider a clique with 3 variables $X_a, X_b, X_c$
+each of which can take one of three labels $i = 1, 2, 3$. Then ${\bf x}
+= [x_{a1}, x_{a2},x_{a3},x_{b1},x_{b2},x_{b3},x_{c1},x_{c2},x_{c3}]$ is the
+vector of relaxed variables. To compute $E({\bf x})$ and $f({\bf x})$, it will
+suffice to specify per label ordering. So let us assume $x_{a1} > x_{b1}
+> x_{c1}$, $x_{a2} > x_{b2} > x_{c2}$ and $x_{a3} > x_{b3} > x_{c3}$.
+
+Then, the relaxed objective is
+
+\begin{equation}
+  E({\bf x}) = \frac{w_c}{2} \cdot [(x_{a1} - x_{c1}) + (x_{a2} - x_{c2}) +(x_{a3} - x_{c3})  ]
+\end{equation}
+
+It can be shown that regardless of inter-labeling rankings, the L.E is given
+by:
+
+\begin{equation}
+  f({\bf x}) = \frac{w_c}{2} \cdot [(x_{a1} - x_{c1}) + (x_{a2} - x_{c2}) +(x_{a3} - x_{c3})  ]
+\end{equation}
+
+One can generalise this over more cliques, variables, and labels to show the equivalence of $E({\bf x})$ and $f({\bf x})$.
+The Lovasz extension of a set function is convex iff it is submodular. Since $E({\bf x})$
+is convex, this implies that $F_{HOPotts}$ is submodular. 
+\end{proof}
+
 \mysection{Fast Conditional Gradient Computation for Dense CRFs}
 \label{sec:dense_crf}
 
