@@ -6,9 +6,10 @@
 
 \begin{equation}
     \sum_{A \in {\mathcal M}} \exp(-s(A)) = \prod_{a = 1}^{N} \sum_{i = 1}^L \exp(-s_{ai})
-    %%\label{eq:ind}
+    \label{eq:ind}
 \end{equation}
 
+\begin{proof}
 Let $t$ be the number of variables, $V^t$ be the corresponding ground set and ${\mathcal M}^t$ be the sets corresponding to valid labelings. Equation \eqref{eq:ind} clearly holds for $t = 1$.
 
 Let us assume that the relation holds for $t = N$, that is,
@@ -25,7 +26,7 @@ For $t = N + 1$,
                                                                   &= \sum_{i = 1}^L \exp(-s_{N+1, i}) \prod_{a = 1}^{N} \sum_{i = 1}^L \exp(-s_{ai}) \nonumber \\
                                                                   &= \prod_{a = 1}^{N + 1} \sum_{i = 1}^L \exp(-s_{ai})
 \end{align}
-
+\end{proof}
 {\lemma Given any submodular extension $F(.)$ of a Potts energy function $E(.)$, its Lovasz extension $f(.)$ defines an LP relaxation of the MAP problem for $E(.)$ as 
 \begin{align}
     \min_{{\bf y} \in \Delta} f({\bf y}).
@@ -39,44 +40,6 @@ For $t = N + 1$,
     \Delta = \{{\bf y}_a \in \mathbb{R}^L | {\bf y}_a \succeq 0  \textrm{ and } \langle {\bf 1}, {\bf y}_a \rangle = 1\}
 \end{equation}
 With objective as maximum of linear functions and domain as a polytope, we have an LP relaxation of the corresponding MAP problem.
-\end{proof}
-
-{\proposition In the limit $T \to 0$, the following problem for Potts energies 
-\begin{equation}
-    \min_{{\bf s} \in EP(F)} \quad g_T ({\bf s}) = \sum_{a = 1}^{N} T \cdot \log \sum_{i = 1}^L \exp(-\frac{s_{ai}}{T}).
-%\label{eq:potts_temp}
-\end{equation}
-
-becomes
-\begin{align}
-    - \min_{{\bf y} \in \Delta} f({\bf y}) 
-\end{align}
-%\label{proposition:potts_equiv}}
-
-{\proposition The objective function $E({\bf y})$ of the LP relaxation (P-LP) is the Lovasz extension of $F_{Potts}(A) = \sum_{i = 1}^L F_i(A)$, where
-\begin{align}
-    F_i(A) &= \sum_a \phi_{a}(i) [|A \cap \{v_{ai}\}| = 1] + \nonumber \\
-           &\sum_{(a, b) \in {\mathcal N}} \frac{w_{ab}}{2} \cdot [|A \cap \{v_{ai}, v_{bi}\}| = 1]
-\end{align}
-%\label{proposition:a-potts_optimal}}
-
-\begin{proof}
-Since $F_{Potts}$ is sum of Ising models $F_i$, we first focus on a particular label $i$ and then generalize. Consider a graph with only two variables $X_a$ and $X_b$ with an edge between them. The ground set in this case is $\{v_{ai}, v_{bi}\}$. Let the corresponding relaxed indicator variables be ${\bf y} = \{y_{aj}, y_{bj}\}$, such that $y_{ai}, y_{bi} \in [0, 1]$ and assume $y_{ai} > y_{bi}$. The Lovasz extension in this case is:
-
-\begin{align}
-f({\bf y}) &= y_{ai} \cdot [F_i(\{v_{ai}\}) - F_i(\{\})] + y_{bi} \cdot [F_i(\{v_{ai}, v_{bi}\}) - F_i(\{v_{ai}\})] \nonumber \\
-&= y_{ai} \cdot [\left(\phi_{a}\left(j\right) + \frac{w_{ab}}{2}\right) - 0] + y_{bi} \cdot [\left(\phi_{a}\left(j\right) + \phi_{b}\left(j\right)\right) - \left(\phi_{a}\left(j\right) + \frac{w_{ab}}{2}\right)] \nonumber \\
-&=  \phi_{a}\left(j\right) \cdot y_{ai} + \phi_{b}\left(j\right) \cdot y_{bi} + \frac{w_{ab}}{2} \cdot \left(y_{ai} - y_{bi}\right)
-\end{align}
-
-In general for both orderings of $y_{ab}$ and $y_{bi}$, we can write
-%
-\begin{equation}
-f({\bf y}) = \phi_{a}(j) \cdot y_{ai} + \phi_{b}(j) \cdot y_{bi} + \frac{w_{ab}}{2} \cdot |y_{ai} - y_{bi}|
-%\label{eq:a-lovasz_ising}
-\end{equation}
-%
-Extending the Lovasz extension of equation \eqref{eq:a-lovasz_ising} to all variables and all labels gives us $E({\bf y})$ in (P-LP). 
 \end{proof}
 
 \mysection{Proofs for Hierarchical Potts Model Extension} 
@@ -200,7 +163,7 @@ Recall that $\max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle$ is the v
         \end{equation}
     and the results follows. 
 \end{proof}
-
+\iffalse
 \section{Additional Experiment Results}
 
 \begin{figure*}[!]
@@ -360,4 +323,5 @@ We plotted the entropy of the marginals obtained from mean-field and our inferen
 \myparagraph{Results}
 
 Figure \ref{fig:stereo_hier} shows the solutions obtained by picking the label with maximum marginal probability for each variable for mean-field and for our algorithm. We also report the time and energy values of the solution for both methods. Though we are not performing MAP estimation, energy values give us a quantitative indication of the quality of solutions. We observe that our algorithm results in more natural looking stereo matching results. However, mean-field gives lower energy value solutions and runs faster than our method for each instance.
+\fi
 \clearpage
