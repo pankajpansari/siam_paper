@@ -31,7 +31,9 @@ algorithm~\citep{ajanthan2017efficient}. As a consequence, we provide the first
 efficient algorithm to compute an upper bound of the log-partition function of
 dense CRFs. This provides complementary information to the popular mean-field
 inference algorithm for dense CRFs, which computes a lower bound on the
-log-partition ~\citep{koltun2011efficient}. We show that the quality of our
+log-partition ~\citep{koltun2011efficient}. Finally, we also obtain the
+submodular extension based on the LP relaxation for a higher-order version of
+the Potts model that captures useful image statistics.  We show that the quality of our
 solution is comparable to tree reweighted message passing (TRW)
 ~\citep{wainwright2005new} for the case of sparse CRFs. Unlike our approach,
 TRW is computationally infeasible for dense CRFs, thereby limiting its use in
@@ -189,6 +191,45 @@ consider in this paper are Potts and hierarchical Potts families.
 
 Motivated by this connection, we ask if one can introduce a temperature parameter to our problem \eqref{eq:min_upper_bound} and transform it to an LP relaxation in the limit $T \to 0$? We can then hope to use the tightest LP relaxations of MAP problems known in literature to find worst-case optimal submodular extensions. We answer this question in affirmative. Specifically, in the following two sections we show how one can select the set encoding and submodular extension to convert problem \eqref{eq:min_upper_bound} to the tightest known LP relaxations for Potts and hierarchical Potts models. Importantly, we prove the worst-case optimality of the extensions thus obtained. 
 
+\mysection{Potts Model}
+
+The Potts model, also known as the uniform metric, specifies the pairwise potentials $\phi_{ab}(x_a, x_b)$ in equation (\ref{eq:energy_min}) as follows:
+\begin{equation}
+    \phi_{ab}(x_a, x_b) = w_{ab} \cdot [x_a \neq x_b],
+\end{equation}
+where $w_{ab}$ is the weight associated with edge $(a, b)$. 
+%
+\myparagraph{Tightest LP Relaxation} Before describing our set encoding and submodular extension, we briefly outline the LP relaxation of the corresponding MAP estimation problem. To this end, we define indicator variables $y_{ai}$ which equal 1 if $X_a = i$, and 0 otherwise. The following LP relaxation is the tightest known for Potts model in the worst-case, assuming the Unique Games Conjecture to be true \citep{manokaran2008sdp}
+\begin{align}
+    \text{(P-LP)} \quad \min_{\bf y} \enskip & E({\bf y}) =  \sum_{a} \sum_{i} \phi_a(i)y_{ai} + \nonumber\\
+     &\sum_{(a, b) \in {\mathcal N}} \sum_{i} \frac{w_{ab}}{2} \cdot |y_{ai} - y_{bi}| \nonumber\\
+    \text{s.t} \quad &{\bf y} \in \Delta.
+\label{eq:p-lp}
+\end{align}
+The set $\Delta$ is the union of $N$ probability simplices:
+\begin{equation}
+    \Delta = \{{\bf y}_a \in \mathbb{R}^L | {\bf y}_a \geq 0  \textrm{ and } \langle {\bf 1}, {\bf y}_a \rangle = 1\},
+    \label{eq:delta}
+\end{equation}
+where $\bf y$ is the vector of all variables and ${\bf y}_a$ is the component
+of $\bf y$ corresponding to $X_a$.
+
+
+\myparagraph{Set Encoding} We choose to use the $1$-of-$L$ encoding for Potts model as described in section \ref{sec:review}. With the encoding scheme for Potts model above, $g({\bf s})$ can be factorised and problem (\ref{eq:min_upper_bound}) can be rewritten as:
+%
+\begin{equation}
+\min_{{\bf s} \in EP(F)} \quad \sum_{a = 1}^{N} \log \sum_{i = 1}^L \exp(-s_{ai}).
+\label{eq:potts_upper_bound}
+\end{equation}
+(See Remark 1 in appendix)
+\myparagraph{Marginal Estimation with Temperature} We now introduce
+a temperature parameter $T > 0$ to problem \eqref{eq:potts_upper_bound} which
+divides $E({\bf x})$, or equivalently divides $\bf s$ belonging to $EP(F)$. Also, since $T > 0$, we can multiply the objective by $T$ leaving the problem unchanged. Without changing the solution, we can transform problem \eqref{eq:potts_upper_bound} as follows
+\begin{equation}
+    \min_{{\bf s} \in EP(F)} \quad g_T ({\bf s}) = \sum_{a = 1}^{N} T \cdot \log \sum_{i = 1}^L \exp(-\frac{s_{ai}}{T}).
+\label{eq:potts_temp}
+\end{equation}
+
 \begin{figure}
 \centering
 \includegraphics[scale = 0.30]{./figures/potts_chain_extension.png}
@@ -198,9 +239,10 @@ which can take 3 labels. The figure shows the way to compute the extension
 values of the set $A = \{v_{1, 1}, v_{4, 1}, v_{3, 2}$\}.}
 \label{fig:alternate}
 \end{figure}
+
 \begin{figure}
 \centering
-\resizebox{150pt}{120pt}{
+\resizebox{180pt}{150pt}{
 \begin{tikzpicture}[-latex ,auto, node distance =1.5 cm and 1.5cm ,on grid
   , semithick , state/.style ={ circle , color = black , draw,black , text=blue , minimum width =1 cm}, cross/.style={color=red, very thick, dashed}, unary/.style={color=blue, very thick}] 
 
@@ -242,44 +284,7 @@ potentials. Each dotted red arc has weight $w_{12}/2$.}
 \label{fig:optimal_extension_graph}
 \end{figure}
 
-\mysection{Potts Model}
 
-The Potts model, also known as the uniform metric, specifies the pairwise potentials $\phi_{ab}(x_a, x_b)$ in equation (\ref{eq:energy_min}) as follows:
-\begin{equation}
-    \phi_{ab}(x_a, x_b) = w_{ab} \cdot [x_a \neq x_b],
-\end{equation}
-where $w_{ab}$ is the weight associated with edge $(a, b)$. 
-%
-\myparagraph{Tightest LP Relaxation} Before describing our set encoding and submodular extension, we briefly outline the LP relaxation of the corresponding MAP estimation problem. To this end, we define indicator variables $y_{ai}$ which equal 1 if $X_a = i$, and 0 otherwise. The following LP relaxation is the tightest known for Potts model in the worst-case, assuming the Unique Games Conjecture to be true \citep{manokaran2008sdp}
-\begin{align}
-    \text{(P-LP)} \quad \min_{\bf y} \enskip & E({\bf y}) =  \sum_{a} \sum_{i} \phi_a(i)y_{ai} + \nonumber\\
-     &\sum_{(a, b) \in {\mathcal N}} \sum_{i} \frac{w_{ab}}{2} \cdot |y_{ai} - y_{bi}| \nonumber\\
-    \text{s.t} \quad &{\bf y} \in \Delta.
-\label{eq:p-lp}
-\end{align}
-The set $\Delta$ is the union of $N$ probability simplices:
-\begin{equation}
-    \Delta = \{{\bf y}_a \in \mathbb{R}^L | {\bf y}_a \geq 0  \textrm{ and } \langle {\bf 1}, {\bf y}_a \rangle = 1\},
-    \label{eq:delta}
-\end{equation}
-where $\bf y$ is the vector of all variables and ${\bf y}_a$ is the component
-of $\bf y$ corresponding to $X_a$.
-
-
-\myparagraph{Set Encoding} We choose to use the $1$-of-$L$ encoding for Potts model as described in section \ref{sec:review}. With the encoding scheme for Potts model above, $g({\bf s})$ can be factorised and problem (\ref{eq:min_upper_bound}) can be rewritten as:
-%
-\begin{equation}
-\min_{{\bf s} \in EP(F)} \quad \sum_{a = 1}^{N} \log \sum_{i = 1}^L \exp(-s_{ai}).
-\label{eq:potts_upper_bound}
-\end{equation}
-(See Remark 1 in appendix)
-\myparagraph{Marginal Estimation with Temperature} We now introduce
-a temperature parameter $T > 0$ to problem \eqref{eq:potts_upper_bound} which
-divides $E({\bf x})$, or equivalently divides $\bf s$ belonging to $EP(F)$. Also, since $T > 0$, we can multiply the objective by $T$ leaving the problem unchanged. Without changing the solution, we can transform problem \eqref{eq:potts_upper_bound} as follows
-\begin{equation}
-    \min_{{\bf s} \in EP(F)} \quad g_T ({\bf s}) = \sum_{a = 1}^{N} T \cdot \log \sum_{i = 1}^L \exp(-\frac{s_{ai}}{T}).
-\label{eq:potts_temp}
-\end{equation}
 \myparagraph{Worst-case Optimal Submodular Extension} 
 We now connect our marginal estimation problem (\ref{eq:min_upper_bound}) with
 LP relaxations using the following proposition.
@@ -357,12 +362,6 @@ we discuss in the following section.
 \mysection{Hierarchical Potts Model}
 \label{sec:rhst_worst-case optimal}
 
-\begin{figure}
-\centering
-\includegraphics[scale = 0.30]{./figures/rhst_notation.png}
-\mycaption{\footnotesize \em A hierarchical Potts model instance illustrating notations with 2 meta-labels (blue) and 4 labels (yellow). All labels are at the same level. $r = 2$, that is, edge-length decreases by 2 at each level. Also, distance between labels 1 and 3 is $d(1, 3) = 0.5 + 1 + 1 + 0.5 = 3$.} 
-\label{fig:rhst}
-\end{figure}
 Potts model imposes the same penalty for unequal assignment of labels to neighbouring variables, regardless of the label dissimilarity. A more natural approach is to vary the penalty based on how different the labels are. A hierarchical Potts model permits this by specifying the distance between labels using a tree with the following properties:
 \vspace{2mm}
 \begin{enumerate}
@@ -374,6 +373,13 @@ Potts model imposes the same penalty for unequal assignment of labels to neighbo
 \end{enumerate}
 \vspace{2mm}
 %
+\begin{figure}
+\centering
+\includegraphics[scale = 0.30]{./figures/rhst_notation.png}
+\mycaption{\footnotesize \em A hierarchical Potts model instance illustrating notations with 2 meta-labels (blue) and 4 labels (yellow). All labels are at the same level. $r = 2$, that is, edge-length decreases by 2 at each level. Also, distance between labels 1 and 3 is $d(1, 3) = 0.5 + 1 + 1 + 0.5 = 3$.} 
+\label{fig:rhst}
+\end{figure}
+
 A subtree $T$ of an hierarchical Potts model is a tree comprising all the descendants of some node $v$ (not root). Given a subtree $T$, $l_T$ denotes the length of the tree-edge leading upward from the root of $T$ and $L(T)$ denotes the set of leaves of $T$. We call the leaves of the tree as labels and all other nodes of the tree expect the root as \emph{meta-labels}. Figure \ref{fig:rhst} illustrates the notations in the context of a hierarchical Potts model.
 %
 \myparagraph{Tightest LP Relaxation} We use the same indicator variables $y_{ai}$ that were employed in the LP relaxation of Potts model. Let $y_a(T) = \sum_{i \in L(T)} y_{ai}$. The following LP relaxation is the tightest known for hierarchical Potts model in the worst-case, assuming the Unique Games Conjecture to be true \citep{manokaran2008sdp}
@@ -462,21 +468,6 @@ of tree metric \citep{bartal1996probabilistic}, the worst-case optimal
 submodular extension for metric energies can be obtained using $F_{hier}$. Note
 that $F_{hier}$ reduces to $F_{Potts}$ for Potts model. One can see this by
 considering the Potts model as a star-shaped tree with edge weights as 0.5.
-\begin{figure}
-\centering
-\begin{tabular}{cc}
-\includegraphics[scale = 0.16]{./figures/synthetic_tree.png} &
-\includegraphics[scale = 0.16]{./figures/synthetic_tree_2_new.png} \\
-  \scriptsize(a) Tree A & \scriptsize(b) Tree B \\
-\end{tabular}
-\mycaption{\footnotesize \em The hierarchical Potts models defining pairwise
-distance among 20 labels used for upper-bound comparison with TRW. Blue nodes
-are the meta-labels and yellow nodes are labels. All the edges at a particular
-level have the same edge weights. The sequence of weights from root level to
-leaf level is 1, 0.5 for tree A and 1, 1, 0.5 for tree B. The yellow node is
-shown to clump together 4 and 5 leaf nodes for tree A and B respectively.} 
-\label{fig:syn_rhst}
-\end{figure}
 
 \mysection{Higher-order Potts Model} The pairwise Potts model often fails
 to capture useful image statistics because it restricts the order of the
@@ -618,10 +609,44 @@ The subdifferential of $E({\bf y})$ at $\bf y_0$ is the `active' linear function
 Equation (\ref{eq:subgrad}) is equivalent to ${\bf s}^*$ computation in line \ref{line:cond_grad} of algorithm \ref{algo:fw_inference}, with ${\bf y_0} = - \nabla g({\bf s}_k)$.
 \end{proof}
 
+A similar observation can be made in case of hierarchical Potts model. Hence we have the first practical algorithm to compute upper bound of log-partition function of a dense CRF for Potts and metric energies.
+
+\mysection{Experiments}
+\label{sec:exp}
+Using synthetic data, we show that our upper-bound compares favorably with TRW
+for both Potts and hierarchical Potts models. For comparison, we restrict
+ourselves to sparse CRFs, as the code available for TRW does not scale well to
+dense CRFs. We also perform stereo matching using dense CRF models and compare
+our results with the mean-field-based approach of \citep{koltun2011efficient}.
+All experiments were run on a x86-64, 3.8GHz machine with 16GB RAM. In this
+section, we refer to our algorithm as \emph{Submod} and mean field as \emph{MF}. 
+
+%\begin{figure}
+%       \Tree [.root [.{m0} 0-3 ] [.{m1} 4-7 ] [.{m2} 8-11 ] [.{m3} 12-15 ] [.{m4} 16-19 ]]
+%   %    \Tree [.root [.{m0} 0 1 2 3 ] [.{m1} 4 5 6 7 ] [.{m2} 8 9 10 11 ] [.{m3} 12 13 14 15 ] [.{m4} 16 17 18 19 ]]
+%%    \Tree[. [. [.1 .2 .3]]]
+%\mycaption{\footnotesize \em An $r$-HST defining pairwise distance among 20 labels used for upper-bound comparison with TRW. $m0$ stands for meta-label 0, and so on.}
+%\label{fig:syn_rhst}
+%\end{figure}
+\begin{figure}
+\centering
+\begin{tabular}{cc}
+\includegraphics[scale = 0.25]{./figures/synthetic_tree.png} &
+\includegraphics[scale = 0.25]{./figures/synthetic_tree_2_new.png} \\
+  \scriptsize(a) Tree A & \scriptsize(b) Tree B \\
+\end{tabular}
+\mycaption{\footnotesize \em The hierarchical Potts models defining pairwise
+distance among 20 labels used for upper-bound comparison with TRW. Blue nodes
+are the meta-labels and yellow nodes are labels. All the edges at a particular
+level have the same edge weights. The sequence of weights from root level to
+leaf level is 1, 0.5 for tree A and 1, 1, 0.5 for tree B. The yellow node is
+shown to clump together 4 and 5 leaf nodes for tree A and B respectively.} 
+\label{fig:syn_rhst}
+\end{figure}
 
 \begin{figure}
 \centering
-\resizebox{150pt}{120pt}{
+\resizebox{180pt}{150pt}{
 \begin{tikzpicture}[-latex ,auto ,node distance =2 cm and 2cm ,on grid
   , semithick , state/.style ={ circle , color = black , draw,black , text=blue , minimum width =1 cm}, cross/.style={color=red, very thick, dashed}, unary/.style={color=blue, very thick}] 
 
@@ -657,25 +682,6 @@ each other. The convention used is same as in figure \ref{fig:optimal_extension_
 \label{fig:alternate_extension}
 \end{figure}
 
-A similar observation can be made in case of hierarchical Potts model. Hence we have the first practical algorithm to compute upper bound of log-partition function of a dense CRF for Potts and metric energies.
-
-\mysection{Experiments}
-\label{sec:exp}
-Using synthetic data, we show that our upper-bound compares favorably with TRW
-for both Potts and hierarchical Potts models. For comparison, we restrict
-ourselves to sparse CRFs, as the code available for TRW does not scale well to
-dense CRFs. We also perform stereo matching using dense CRF models and compare
-our results with the mean-field-based approach of \citep{koltun2011efficient}.
-All experiments were run on a x86-64, 3.8GHz machine with 16GB RAM. In this
-section, we refer to our algorithm as \emph{Submod} and mean field as \emph{MF}. 
-
-%\begin{figure}
-%       \Tree [.root [.{m0} 0-3 ] [.{m1} 4-7 ] [.{m2} 8-11 ] [.{m3} 12-15 ] [.{m4} 16-19 ]]
-%   %    \Tree [.root [.{m0} 0 1 2 3 ] [.{m1} 4 5 6 7 ] [.{m2} 8 9 10 11 ] [.{m3} 12 13 14 15 ] [.{m4} 16 17 18 19 ]]
-%%    \Tree[. [. [.1 .2 .3]]]
-%\mycaption{\footnotesize \em An $r$-HST defining pairwise distance among 20 labels used for upper-bound comparison with TRW. $m0$ stands for meta-label 0, and so on.}
-%\label{fig:syn_rhst}
-%\end{figure}
 \begin{figure}
 \centering
 \includegraphics[scale = 0.50]{./figures/synthetic_upper_bound_comparison.pdf}
@@ -689,6 +695,33 @@ extensions (dotted). Also, the worst-case optimal extension bounds are in
 similar range as the TRW bounds.}
 \label{fig:syn_plot}
 \end{figure}
+
+
+\mysubsection{Upper-bound Comparison using Synthetic Data}
+\label{subsec:synthetic}
+\myparagraph{Data} We generate lattices of size 100 $\times$ 100, where each
+lattice point represents a variable taking one of 20 labels. The pairwise
+relations of the sparse CRFs are defined by 4-connected neighbourhoods. The
+unary potentials are uniformly sampled in the range [0, 10]. We consider (a)
+Potts model and (b) hierarchical Potts models with pairwise distance between
+labels given by the trees of figure \ref{fig:syn_rhst}. The pairwise weights
+are varied in the range $\{1, 2, 5, 10\}$. We compare the results of
+our worst-case optimal submodular extension with an alternate submodular
+extension as given in figure \ref{fig:alternate_extension}.
+
+\myparagraph{Method} For our algorithm, we use the standard schedule $\gamma = 2/(k + 2)$ to obtain step size $\gamma$ at iteration $k$. We run our algorithm till convergence - 100 iterations suffice for this. The experiments are repeated for 100 randomly generated unaries for each model and each weight. For TRW, we used the MATLAB toolbox of \citep{domke2013learning}. The baseline code does not optimise over tree distributions. We varied the edge-appearance probability in trees over the range [0.1 - 0.5] and found 0.5 to give tightest upper bound.
+
+\myparagraph{Results} We plot the ratio of the normalised difference of the upper
+bound values of our method with TRW as a function of pairwise weights. The
+ratios are averaged over 100 instances of unaries. Figure \ref{fig:syn_plot}
+shows the plots for Potts and hierarchical Potts models for the worst-case
+optimal and alternate extension. We find that the optimal extension (solid) results 
+in tighter upper-bounds than the alternate extension (dotted) for both models.
+This is because the representation of the submodular function using figure \ref{fig:alternate_extension} necessitates that $\phi_a(i)$ be non-negative. This implies that $F(A)$ values are larger
+for the worst-case optimal extension of figure \ref{fig:optimal_extension_graph} as compared to the
+alternate extension. Hence the minimisation problem \ref{eq:min_upper_bound}
+has larger domain $EP(F)$ for the optimal extension, thereby resulting in better minima. Figure \ref{fig:syn_plot} also indicates that our algorithm with optimal extension provides similar range of upper bound as TRW, thereby providing empirical justification of our
+method. TRW makes use of the standard LP relaxation \citep{chekuri2004linear} which is tighter than Kleinberg-Tardos relaxation, resulting in better approximation. However, TRW does not scale well with neighborhood size, thereby prohibiting its use in dense CRFs.
 
 \begin{figure*}
     \centering
@@ -720,31 +753,6 @@ the mean-field algorithm of Koltun and Krahenbuhl \citep{koltun2011efficient}. W
 \label{fig:stereo}
 \end{figure*}
 
-\mysubsection{Upper-bound Comparison using Synthetic Data}
-\label{subsec:synthetic}
-\myparagraph{Data} We generate lattices of size 100 $\times$ 100, where each
-lattice point represents a variable taking one of 20 labels. The pairwise
-relations of the sparse CRFs are defined by 4-connected neighbourhoods. The
-unary potentials are uniformly sampled in the range [0, 10]. We consider (a)
-Potts model and (b) hierarchical Potts models with pairwise distance between
-labels given by the trees of figure \ref{fig:syn_rhst}. The pairwise weights
-are varied in the range $\{1, 2, 5, 10\}$. We compare the results of
-our worst-case optimal submodular extension with an alternate submodular
-extension as given in figure \ref{fig:alternate_extension}.
-
-\myparagraph{Method} For our algorithm, we use the standard schedule $\gamma = 2/(k + 2)$ to obtain step size $\gamma$ at iteration $k$. We run our algorithm till convergence - 100 iterations suffice for this. The experiments are repeated for 100 randomly generated unaries for each model and each weight. For TRW, we used the MATLAB toolbox of \citep{domke2013learning}. The baseline code does not optimise over tree distributions. We varied the edge-appearance probability in trees over the range [0.1 - 0.5] and found 0.5 to give tightest upper bound.
-
-\myparagraph{Results} We plot the ratio of the normalised difference of the upper
-bound values of our method with TRW as a function of pairwise weights. The
-ratios are averaged over 100 instances of unaries. Figure \ref{fig:syn_plot}
-shows the plots for Potts and hierarchical Potts models for the worst-case
-optimal and alternate extension. We find that the optimal extension (solid) results 
-in tighter upper-bounds than the alternate extension (dotted) for both models.
-This is because the representation of the submodular function using figure \ref{fig:alternate_extension} necessitates that $\phi_a(i)$ be non-negative. This implies that $F(A)$ values are larger
-for the worst-case optimal extension of figure \ref{fig:optimal_extension_graph} as compared to the
-alternate extension. Hence the minimisation problem \ref{eq:min_upper_bound}
-has larger domain $EP(F)$ for the optimal extension, thereby resulting in better minima. Figure \ref{fig:syn_plot} also indicates that our algorithm with optimal extension provides similar range of upper bound as TRW, thereby providing empirical justification of our
-method. TRW makes use of the standard LP relaxation \citep{chekuri2004linear} which is tighter than Kleinberg-Tardos relaxation, resulting in better approximation. However, TRW does not scale well with neighborhood size, thereby prohibiting its use in dense CRFs.
 
 \mysubsection{Stereo Matching using Dense CRFs}
 \label{subsec:stereo}
@@ -765,7 +773,9 @@ for our algorithm. We also report the time and energy values of the solution
 for both methods. Though we are not performing MAP estimation, energy values
 give us a quantitative indication of the quality of solutions. For the full set of
 21 image pairs (2006 dataset), the average ratio of the energies of the solutions from our method 
-compared to mean-field is 0.943. The avearge time ratio is 10.66. We observe that our algorithm results in more natural looking stereo matching results with lower energy values for all images. However, mean-field runs faster than our method for each instance.
+compared to mean-field is 0.943. The avearge time ratio is 10.66. We observe that our algorithm results in more natural looking stereo matching results with lower energy values for all images. However, mean-field runs faster than our method for each instance.The set of hyperparameters that we used can be found in the
+appendix.
+
 
 \begin{figure*}
     \centering
@@ -779,6 +789,10 @@ compared to mean-field is 0.943. The avearge time ratio is 10.66. We observe tha
         \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution
         & \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution
         & \scriptsize(a) Flowerpots GT & \scriptsize(b) Submod solution\\
+        {} & {} 
+        & {} & \scriptsize 2476.82s
+        & {} & \scriptsize 2471.58s\\
+
 \end{tabular}
 %\vspace{2mm}
 \mycaption{\footnotesize \em Stereo matching using dense CRFs with higher-order
@@ -799,10 +813,14 @@ gradient coordinates $s^*_{\sigma(i)}$ requires us to obtain differences of the
 nested sets $F(S_i) - F(S_{i - 1})$. We store the clique state at each $i$, and
 this enables us to compute the difference for each coordinate in a constant
 amount of time. In this case, computation of conditional gradient takes
-$\mathcal{O}(cNL)$ where $c$ is the number of hihger-order cliques.
+$\mathcal{O}(cNL)$ where $c$ is the number of higher-order cliques. We ran our
+algorithm for 200 iterations.
 
-\myparagraph{Results} Figure \ref{fig:stereo_hop} shows some example solutions obtained by picking the
-label with maximum marginal probability for each variable. We observe that our method gives results that are reasonably close to the ground-truth. 
+\myparagraph{Results} Figure \ref{fig:stereo_hop} shows some example solutions
+obtained by picking the label with maximum marginal probability for each
+variable. We observe that our method gives results that are reasonably close to
+the ground-truth. The set of hyperparameters that we used can be found in the
+appendix.
 
 \mysection{Discussion}
 \label{sec:conclude}
