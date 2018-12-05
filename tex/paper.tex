@@ -689,6 +689,7 @@ extensions (dotted). Also, the worst-case optimal extension bounds are in
 similar range as the TRW bounds.}
 \label{fig:syn_plot}
 \end{figure}
+
 \begin{figure*}
     \centering
 \begin{tabular}{cccccc}
@@ -755,7 +756,8 @@ we make use of the modified Gaussian filtering implementation for dense CRFs by
 \citep{ajanthan2017efficient} to compute the conditional gradient at each step.
 The step size $\gamma$ at each iteration is selected by doing line search. We
 run our algorithm till 100 iterations, since the visual quality of the solution
-does not show much improvement beyond this point. We run mean-field up to convergence, with a threshold of 0.001 for change in KL-divergence.
+does not show much improvement beyond this point. We run mean-field up to
+convergence, with a threshold of 0.001 for change in KL-divergence. 
 
 \myparagraph{Results} Figure \ref{fig:stereo} shows some example solutions obtained by picking the
 label with maximum marginal probability for each variable for mean-field and
@@ -765,12 +767,29 @@ give us a quantitative indication of the quality of solutions. For the full set 
 21 image pairs (2006 dataset), the average ratio of the energies of the solutions from our method 
 compared to mean-field is 0.943. The avearge time ratio is 10.66. We observe that our algorithm results in more natural looking stereo matching results with lower energy values for all images. However, mean-field runs faster than our method for each instance.
 
+\begin{figure*}
+    \centering
+\begin{tabular}{cccccc}
+        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_GT} &
+        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_hop} &
+        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/baby1_GT} &
+        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/baby1_hop} &
+        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/flowerpots_GT} &
+        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/flowerpots_hop} \\
+        \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution
+        & \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution
+        & \scriptsize(a) Flowerpots GT & \scriptsize(b) Submod solution\\
+\end{tabular}
+%\vspace{2mm}
+\mycaption{\footnotesize \em Stereo matching using dense CRFs with higher-order
+  Potts term in addition to Potts compatibility and Gaussian pairwise potentials.}
+\label{fig:stereo_hop}
+\end{figure*}
+
+
 \mysubsection{Stereo Matching using Higher-order Potts Model}
 \label{subsec:stereo_hop}
-\myparagraph{Data} Next, we use the higher-order Potts model for stereo
-matching on the Middlebury dataset. For this
-purpose, we take a dense CRF model with Potts compatibility term and Gaussian pairwise
-potentials, and augment it with higher-order Potts term.
+\myparagraph{Data} Next, we use the higher-order Potts model for stereo matching on the Middlebury dataset. Higher-order Potts model is suitable to be used for only some images in the dataset, since others have gradually sloping surfaces and higher-order cliques will force all pixels on these surfaces to take similar disparity values.  We take a dense CRF model with Potts compatibility term and Gaussian pairwise potentials, and augment it with higher-order Potts term. We obtain higher-order cliques by using super-pixels obtained from mean-shift algorithm \citep{comaniciu2002mean}.
 
 \myparagraph{Method} We again use the modified Gaussian filtering implementation for dense CRFs by
 \citep{ajanthan2017efficient} to compute the conditional gradient at each step.
@@ -783,7 +802,7 @@ amount of time. In this case, computation of conditional gradient takes
 $\mathcal{O}(cNL)$ where $c$ is the number of hihger-order cliques.
 
 \myparagraph{Results} Figure \ref{fig:stereo_hop} shows some example solutions obtained by picking the
-label with maximum marginal probability for each variable.
+label with maximum marginal probability for each variable. We observe that our method gives results that are reasonably close to the ground-truth. 
 
 \mysection{Discussion}
 \label{sec:conclude}
