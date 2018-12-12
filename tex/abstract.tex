@@ -2,16 +2,16 @@
     Submodular extensions of an energy function can be used to efficiently
     compute approximate marginals via variational inference. The accuracy of
     the marginals depends crucially on the quality of the submodular extension.
-    To identify the best possible extension, we show an equivalence between the
+    To identify accurate extensions for different classes of energy functions, we show a relation between the
     submodular extensions of the energy and the objective functions of linear
-    programming (LP) relaxations for the corresponding MAP estimation problem.
+    programming (LP) relaxations for the corresponding MAP estimation problem via the Lovasz extension. 
     This allows us to (i) establish the worst-case optimality of the submodular
     extension for Potts model used in the literature; (ii) identify the
     worst-case optimal submodular extension for the more general class of
     metric labeling; (iii) efficiently compute the marginals for the widely
     used dense CRF model with the help of a recently proposed Gaussian
-    filtering method; and (iv) identify the submodular extension based on an LP
-    relaxation for the higher-order Potts model. Using synthetic and real data, we show that our approach provides comparable upper bounds on the log-partition function to those obtained using tree-reweighted message passing (TRW) in cases where the latter is computationally feasible. Importantly, unlike TRW, our approach provides the first practical algorithm to compute an upper bound on the dense CRF model.
+    filtering method; and (iv) propose a good submodular extension based on an accurate LP
+    relaxation for the higher-order Potts model. Using synthetic and real data, we show that our approach provides comparable upper bounds on the log-partition function to those obtained using tree-reweighted message passing (TRW) in cases where the latter is computationally feasible. Importantly, unlike TRW, our approach provides the first practical algorithm to compute an upper bound on the dense CRF model with higher-order Potts potentials.
 \end{abstract}
 
 
