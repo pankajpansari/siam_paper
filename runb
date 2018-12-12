@@ -1,0 +1,5 @@
+#!/bin/bash
+pdflatex siam_main.tex
+bibtex siam_main.aux
+pdflatex siam_main.tex
+pdflatex siam_main.tex
