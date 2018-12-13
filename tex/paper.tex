@@ -205,12 +205,12 @@ Also, we seek a closed-form analytical expression for $\mathcal F$. For the sake
 in the analysis that follows we use $F$ to represent ${\mathcal F}(E)$ where
 the meaning is clear from context.
 
-\mysubsection{Potts Model}
-The Potts model, also known as the uniform metric, specifies the pairwise potentials $\phi_{ab}(x_a, x_b)$ in equation (\ref{eq:energy_min}) as follows:
+\mysubsection{Pairwise Potts Model}
+The pairwise Potts model, also known as the uniform metric, specifies the pairwise potentials $\phi_{ab}(x_a, x_b)$ in equation (\ref{eq:energy_min}) as follows:
 \begin{equation}
     \phi_{ab}(x_a, x_b) = w_{ab} \cdot [x_a \neq x_b],
 \end{equation}
-where $w_{ab}$ is the weight associated with edge $(a, b)$. 
+where $w_{ab}$ is the weight associated with edge $(a, b)$. There are no higher-order potential terms in this model as in equation (\ref{eq:energy_min}).
 %
 \myparagraph{Tightest LP Relaxation} Before describing our set encoding and submodular extension, we briefly outline the LP relaxation of the corresponding MAP estimation problem. To this end, we define indicator variables $y_{ai}$ which equal 1 if $X_a = i$, and 0 otherwise. The following LP relaxation is the tightest known for Potts model in the worst-case, assuming the Unique Games Conjecture to be true \citep{manokaran2008sdp}
 \begin{align}
@@ -320,12 +320,7 @@ In vector form, the problem becomes
     & = - \max_{{\bf s} \in EP(F)} \min_{{\bf y} \in \Delta} \langle {\bf y}, {\bf s} \rangle
     \label{eq:maxmin}
 \end{align}
-$\Delta$ is the union of $N$ probability simplices:
-\begin{equation}
-    \Delta = \{{\bf y}_a \in \mathbb{R}^L | {\bf y}_a \succeq 0  \textrm{ and } \langle {\bf 1}, {\bf y}_a \rangle = 1\}
-    \label{eq:delta2}
-\end{equation}
-where ${\bf y}_a$ is the component of $\bf y$ corresponding to the $a$-th variable. By the minimax theorem for LP, we can reorder the terms:
+where $\Delta$ is the domain as defined as in equation (\ref{eq:delta}). By the minimax theorem for LP, we can reorder the terms:
 \begin{equation}
     - \min_{{\bf y} \in \Delta} \max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle 
     \label{eq:minmax}
@@ -339,7 +334,7 @@ Recall that $\max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle$ is the v
 
 The above problem is equivalent to an LP relaxation of the corresponding MAP estimtation problem (see Remark 2 in appendix). We note that $g_T ({\bf s})$ in problem \eqref{eq:potts_temp} becomes the objective function of an LP relaxation in the limit $T \to 0$. We seek to obtain the worst-case optimal submodular extension by making $g_T ({\bf s})$ same as the objective of (P-LP) as $T \to 0$. Since at $T = 1$, problems \eqref{eq:potts_temp} and \eqref{eq:potts_upper_bound} are equivalent, this gives us the worst-case optimal extension for our problem \eqref{eq:potts_upper_bound}. 
 
-The question now becomes how to recover the worst-case optimal submodular extension using $E({\bf y})$. The following propositions answers this question.
+The question now becomes how to recover the worst-case optimal submodular extension using $E({\bf y})$. The following proposition answers this question.
 {\proposition The worst-case optimal  submodular extension for Potts model is given by $F_{Potts}(A) = \sum_{i = 1}^L F_i(A)$, where
 \begin{align}
     F_i(A) &= \sum_a \phi_{a}(i) [|A \cap \{v_{ai}\}| = 1] + \nonumber \\
