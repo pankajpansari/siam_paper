@@ -7,13 +7,13 @@ elegant variational inference algorithm to compute the marginals of a discrete
 CRF by minimising an upper-bound on the log-partition function. In the initial
 work of \citep{djolonga2014map}, the energy of the CRF was restricted to be submodular. In a later work ~\citep{zhang2015higher}, the algorithm was extended to handle more general Potts energy functions. The key idea here is to define a large ground set such that its subsets represent valid labelings, sublabelings or even incorrect labelings (these may assign two separate labels to a random variable and hence be invalid). Given the large ground set, it is possible to define a submodular set function whose value is equal to the energy of the CRF for subsets that specify a valid labeling of the model. We refer to such a set function as a {\em submodular extension} of the energy. 
 
-For a given energy function, there exists a large number of possible submodular extensions. The accuracy of the variational inference algorithm depends crucially on the choice of the submodular extension. Yet, previous work has largely ignored the question of identifying the best extension. Indeed, the difficulty of identifying submodular extensions of general energy functions could be a major reason why the experiments of~\citep{zhang2015higher} were restricted to the special case of models specified by the Potts energy functions.
+For a given energy function, there exists a large number of possible submodular extensions. The accuracy of the variational inference algorithm depends crucially on the choice of the submodular extension. Yet, previous work has largely ignored the question of identifying accurate extensions for different energy classes. Indeed, the difficulty of identifying submodular extensions of general energy functions could be a major reason why the experiments of~\citep{zhang2015higher} were restricted to the special case of models specified by the Potts energy functions.
 
 In this work, we establish a hitherto unknown connection between the submodular
 extension of the Potts model proposed by Zhang et al.\citep{zhang2015higher}, and the
 objective function of an accurate linear programming (LP) relaxation of the
-corresponding MAP estimation problem~\citep{kleinberg2002approximation}. This
-connection has three important practical consequences. First, it establishes
+corresponding MAP estimation problem~\citep{kleinberg2002approximation}. Specifically, the Lovasz extension of a submodular extension can be shown to be an objective function for the LP relaxation. This
+connection has four important practical consequences. First, it establishes
 the accuracy of the submodular extension of the Potts model, via the
 UGC-hardness worst-case optimality of the LP relaxation. Second, it provides an
 accurate submodular extension of the hierarchical Potts model, via the LP
@@ -31,14 +31,14 @@ algorithm~\citep{ajanthan2017efficient}. As a consequence, we provide the first
 efficient algorithm to compute an upper bound of the log-partition function of
 dense CRFs. This provides complementary information to the popular mean-field
 inference algorithm for dense CRFs, which computes a lower bound on the
-log-partition ~\citep{koltun2011efficient}. Finally, we also obtain the
-submodular extension based on the LP relaxation for a higher-order version of
-the Potts model that captures useful image statistics.  We show that the quality of our
-solution is comparable to tree reweighted message passing (TRW)
+log-partition ~\citep{koltun2011efficient}. Fourthly, we obtain a good 
+submodular extension for higher-order Potts model based on an accurate LP relaxation. Higher-order Potts model is a generalisation of the pairwise Potts model, and helps to capture interesting properties of the image that cannot be done using pairwise models. We show that our upper-bounds on synthetic problems are comparable to those from tree reweighted message passing (TRW)
 ~\citep{wainwright2005new} for the case of sparse CRFs. Unlike our approach,
 TRW is computationally infeasible for dense CRFs, thereby limiting its use in
-practice. Using dense CRF models, we perform stereo matching on standard
-data sets and obtain better results than \citep{koltun2011efficient}. The complete code is available at \url{https://github.com/pankajpansari/denseCRF}.
+practice. Using pairwise dense CRF models, we perform stereo matching on standard
+data sets and obtain better results than \citep{koltun2011efficient}. We also perform semantic segmentation on the MSRC-21 dataset 
+
+The complete code is available at \url{https://github.com/pankajpansari/denseCRF}.
 
 \mysection{Preliminaries}
 \label{sec:prelim}
