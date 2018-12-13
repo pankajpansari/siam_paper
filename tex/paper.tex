@@ -32,7 +32,10 @@ efficient algorithm to compute an upper bound of the log-partition function of
 dense CRFs. This provides complementary information to the popular mean-field
 inference algorithm for dense CRFs, which computes a lower bound on the
 log-partition ~\citep{koltun2011efficient}. Fourthly, we obtain a good 
-submodular extension for higher-order Potts model based on an accurate LP relaxation. Higher-order Potts model is a generalisation of the pairwise Potts model, and helps to capture interesting properties of the image that cannot be done using pairwise models. We show that our upper-bounds on synthetic problems are comparable to those from tree reweighted message passing (TRW)
+submodular extension for higher-order Potts model based on an accurate LP
+relaxation. Higher-order Potts model is a generalisation of the pairwise Potts
+model, and helps to capture interesting properties of the image that cannot be
+done using pairwise models~\citep{vineet2014filter, kohli2009robust}. We show that our upper-bounds on synthetic problems are comparable to those from tree reweighted message passing (TRW)
 ~\citep{wainwright2005new} for the case of sparse CRFs. Unlike our approach,
 TRW is computationally infeasible for dense CRFs, thereby limiting its use in
 practice. Using pairwise dense CRF models, we perform stereo matching on standard
@@ -57,7 +60,7 @@ The set function $F$ is {\it modular} if there exists ${\bf s} \in \mathbb{R}^N$
 EP(F) &= \{{\bf s} \in \mathbb{R}^N | \enskip \forall A \subseteq U: s(A) \leq F(A)\},
 \label{eq:epf}
 \end{align}
-where $\bf s$ denotes the modular function $s(.)$ considered as a vector. 
+where $\bf s$ denotes the modular function $s(.)$ represented as a vector. 
 
 \myparagraph{Lovasz Extension} For a given set function $F$ with $F(\emptyset) = 0$, the value of its Lovasz extension $f({\bf w}): \mathbb{R}^N \to \mathbb{R}$ is defined as follows: order the components of $\bf w$ in decreasing order such that $w_{j_1} \geq w_{j_2} \geq \dots \geq w_{j_N}$, where $(j_1, j_2, \dots, j_N)$ is the corresponding permutation of the indices. Then,
 %
@@ -94,6 +97,14 @@ A CRF is defined as a graph on a set of random variables ${\mathcal X} = \{X_1,\
 %
 where $\phi_a$ and $\phi_{ab}$ are the unary and pairwise potentials respectively. In computer vision, we often think of $\mathcal X$ as arranged on a grid. A \emph{sparse CRF} has $\mathcal N$ defined by 4-connected or 8-connected neighbourhood relationships. In a \emph{dense CRF}, on the other hand, every variable is connected to every other variable.
 
+We can augment the above pairwise models with higher-order potentials. Let $\mathcal C$ be the set of cliques, which can, for instance, be the set of superpixels from an image segmentation method. Also, let $\bf x_c$ be the component of $\bf x$ formed by elements in clique $c$. The energy function now also contains higher-order potentials 
+%
+\begin{equation}
+    E({\bf x}) = \sum_{a \in {\mathcal X}} \phi_a(x_a) + \sum_{(a, b) \in {\mathcal N}} \phi_{ab}(x_a, x_b) + \sum_{c \in {\mathcal C}} \phi_c({\bf x_c}),
+    \label{eq:energy_hop_min}
+  \end{equation}
+%
+ 
 The energy function also defines a probability distribution $P({\bf x})$ as follows:
 \begin{equation}
     P({\bf x}) =
@@ -125,7 +136,7 @@ uses submodular extensions.
 
 \myparagraph{Submodular Extensions} A submodular extension is defined using
 a ground set such that some of its subsets correspond to valid CRF labelings.
-To such an extension, we need an encoding scheme which gives the sets corresponding to valid CRF labelings. 
+To obtain such an extension, we need an encoding scheme which gives the sets corresponding to valid CRF labelings. 
 
 One example of an encoding scheme is the $1$-of-$L$ encoding, illustrated in figure \ref{fig:encoding}. Let each variable $X_a$ take one of $L$ possible labels. In this scheme, we represent the set of possible assignments for $X_a$ by the set $V_a = \{v_{a1}, v_{a2}, \dots, v_{aL}\}$. If $X_a$ is assigned label $i$, then we select the element $v_{ai}$. Extending to all variables, our ground set becomes $V = \cup_{a = 1}^N V_a$. A valid assignment $A \subseteq V$ assigns each variable exactly one label, that is, $|A \cap V_a| = 1$ for all $V_a$. We denote the set of valid assignments by $\mathcal M$ where $\mathcal{M} = \cap_{a = 1}^{N} \mathcal{M}_a$ and $\mathcal{M}_a = \{A: |A \cap V_a| = 1\}$.
 
@@ -723,35 +734,35 @@ alternate extension. Hence the minimisation problem \ref{eq:min_upper_bound}
 has larger domain $EP(F)$ for the optimal extension, thereby resulting in better minima. Figure \ref{fig:syn_plot} also indicates that our algorithm with optimal extension provides similar range of upper bound as TRW, thereby providing empirical justification of our
 method. TRW makes use of the standard LP relaxation \citep{chekuri2004linear} which is tighter than Kleinberg-Tardos relaxation, resulting in better approximation. However, TRW does not scale well with neighborhood size, thereby prohibiting its use in dense CRFs.
 
-%\begin{figure*}
-%    \centering
-%\begin{tabular}{cccccc}
-%        \includegraphics[scale = 0.14]{\imagePath/stereo/venus_GT} &
-%        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/venus_left_mf} &
-%        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/venus_left_submod} &
-%    %
-%        \includegraphics[scale = 0.19]{\imagePath/stereo/tsukuba_GT} &
-%        \includegraphics[scale = 0.19]{\imagePath/stereo/potts/tsukuba_left_mf} &
-%        \includegraphics[scale = 0.19]{\imagePath/stereo/potts/tsukuba_left_submod} \\
-%        \scriptsize(a) Venus GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution & \scriptsize(a) Tsukuba GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution\\
-%        {} & \scriptsize  60.32s, 1.83e+07 &  \scriptsize 469.75s, {\bf 1.55e+07} & {} & \scriptsize  14.93s, 8.21e+06 & \scriptsize 215.22s, {\bf 4.12e+06} \\
-%         \includegraphics[scale = 0.14]{\imagePath/stereo/cones_GT} &
-%        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/cones_left_mf} &
-%        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/cones_left_submod} &
-%        %
-%       %
-%         \includegraphics[scale = 0.15]{\imagePath/stereo/teddy_GT} &
-%        \includegraphics[scale = 0.15]{\imagePath/stereo/potts/teddy_left_mf} &
-%        \includegraphics[scale = 0.15]{\imagePath/stereo/potts/teddy_left_submod} \\
-%    \scriptsize(a) Cones GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution & \scriptsize(a) Teddy GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution\\
-%        {} & \scriptsize 239.14s, 2.68e+07 &  \scriptsize 1082.72s, {\bf 1.27e+07} & {} & \scriptsize 555.30s, 2.36e+07 & \scriptsize 1257.86s, {\bf 1.58e+07}\\
-%\end{tabular}
-%%\vspace{2mm}
-%\mycaption{\footnotesize \em Stereo matching using dense CRFs with Potts
-%compatibility and Gaussian pairwise potentials. We compare our solution with
-%the mean-field algorithm of Koltun and Krahenbuhl \citep{koltun2011efficient}. We observe that our method gives better-looking solutions with lower energy value at the cost of higher computational time.}
-%\label{fig:stereo}
-%\end{figure*}
+\begin{figure*}
+    \centering
+\begin{tabular}{cccccc}
+        \includegraphics[scale = 0.14]{\imagePath/stereo/venus_GT} &
+        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/venus_left_mf} &
+        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/venus_left_submod} &
+    %
+        \includegraphics[scale = 0.19]{\imagePath/stereo/tsukuba_GT} &
+        \includegraphics[scale = 0.19]{\imagePath/stereo/potts/tsukuba_left_mf} &
+        \includegraphics[scale = 0.19]{\imagePath/stereo/potts/tsukuba_left_submod} \\
+        \scriptsize(a) Venus GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution & \scriptsize(a) Tsukuba GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution\\
+        {} & \scriptsize  60.32s, 1.83e+07 &  \scriptsize 469.75s, {\bf 1.55e+07} & {} & \scriptsize  14.93s, 8.21e+06 & \scriptsize 215.22s, {\bf 4.12e+06} \\
+         \includegraphics[scale = 0.14]{\imagePath/stereo/cones_GT} &
+        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/cones_left_mf} &
+        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/cones_left_submod} &
+        %
+       %
+         \includegraphics[scale = 0.15]{\imagePath/stereo/teddy_GT} &
+        \includegraphics[scale = 0.15]{\imagePath/stereo/potts/teddy_left_mf} &
+        \includegraphics[scale = 0.15]{\imagePath/stereo/potts/teddy_left_submod} \\
+    \scriptsize(a) Cones GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution & \scriptsize(a) Teddy GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution\\
+        {} & \scriptsize 239.14s, 2.68e+07 &  \scriptsize 1082.72s, {\bf 1.27e+07} & {} & \scriptsize 555.30s, 2.36e+07 & \scriptsize 1257.86s, {\bf 1.58e+07}\\
+\end{tabular}
+%\vspace{2mm}
+\mycaption{\footnotesize \em Stereo matching using dense CRFs with Potts
+compatibility and Gaussian pairwise potentials. We compare our solution with
+the mean-field algorithm of Koltun and Krahenbuhl \citep{koltun2011efficient}. We observe that our method gives better-looking solutions with lower energy value at the cost of higher computational time.}
+\label{fig:stereo}
+\end{figure*}
 
 
 \mysubsection{Stereo Matching using Dense CRFs}
@@ -777,29 +788,29 @@ compared to mean-field is 0.943. The avearge time ratio is 10.66. We observe tha
 appendix.
 
 
-%\begin{figure*}
-%    \centering
-%\begin{tabular}{cccccc}
-%        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_GT} &
-%        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_hop} &
-%        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/baby1_GT} &
-%        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/baby1_hop} &
-%        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/flowerpots_GT} &
-%        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/flowerpots_hop} \\
-%        \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution
-%        & \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution
-%        & \scriptsize(a) Flowerpots GT & \scriptsize(b) Submod solution\\
-%        {} & {} 
-%        & {} & \scriptsize 2476.82s
-%        & {} & \scriptsize 2471.58s\\
-%
-%\end{tabular}
-%%\vspace{2mm}
-%\mycaption{\footnotesize \em Stereo matching using dense CRFs with higher-order
-%  Potts term in addition to Potts compatibility and Gaussian pairwise potentials.}
-%\label{fig:stereo_hop}
-%\end{figure*}
-%
+\begin{figure*}
+    \centering
+\begin{tabular}{cccccc}
+        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_GT} &
+        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_hop} &
+        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/baby1_GT} &
+        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/baby1_hop} &
+        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/flowerpots_GT} &
+        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/flowerpots_hop} \\
+        \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution
+        & \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution
+        & \scriptsize(a) Flowerpots GT & \scriptsize(b) Submod solution\\
+        {} & {} 
+        & {} & \scriptsize 2476.82s
+        & {} & \scriptsize 2471.58s\\
+
+\end{tabular}
+%\vspace{2mm}
+\mycaption{\footnotesize \em Stereo matching using dense CRFs with higher-order
+  Potts term in addition to Potts compatibility and Gaussian pairwise potentials.}
+\label{fig:stereo_hop}
+\end{figure*}
+
 
 \mysubsection{Stereo Matching using Higher-order Potts Model}
 \label{subsec:stereo_hop}
