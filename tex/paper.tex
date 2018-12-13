@@ -176,7 +176,6 @@ First, problem \eqref{eq:min_upper_bound} is convex. Second, as solving an LP ov
 
 \mysection{Accurate Submodular Extensions from LP Relaxations}
 
-\myparagraph{Relation between Marginal Estimation and LP Relaxation}
 Different choices of extensions $F$ change the domain in problem \eqref{eq:min_upper_bound}, leading to different upper bounds on the log-partition function. How does one come up with an extension which yields the tightest bound? 
 
 If we introduce a temperature parameter in $P({\bf x})$ (equation \eqref{eq:crf_prob_distrib}) by using $E({\bf x})/T$ and decrease $T$, the resulting distribution starts to peak more sharply around its mode. As $T \to 0$, marginal estimation becomes the same as MAP inference since the resulting distribution $P^0({\bf x})$ has mass 1 at its mode ${\bf x}^*$ and is 0 everywhere else. Given the MAP solution ${\bf x}^*$, one can compute the marginals as $P(X_i = j) = [x_i^* = j]$, where [.] is the Iverson bracket.
@@ -185,7 +184,9 @@ If we introduce a temperature parameter in $P({\bf x})$ (equation \eqref{eq:crf_
 
 We answer this question in affirmative. Specifically, in the following two sections we show how one can select the set encoding and submodular extension to convert problem \eqref{eq:min_upper_bound} to accurate LP relaxations for Potts, hierarchical Potts and higher-order Potts models. In fact, when the LP relaxation has tightness guarantees, we obtain worst-case optimal submodular extensions - a notion we elucidate shortly. 
 
-\myparagraph{Worst-case Optimal Submodular Extensions}
+\mysection{Worst-case Optimal Submodular Extensions}
+
+\myparagraph{Worst-case Optimality}
 In this paper, we focus on submodular extension families $\mathcal F(.)$ which
 for each instance of the energy function $E(.)$ belonging to a given class $\mathcal E$ gives a corresponding
 submodular extension ${\mathcal F}(E)$. Our extensions are derived from LP relaxations. When the LP relaxation is the tightest known, the extension family ${\mathcal
@@ -204,8 +205,7 @@ Also, we seek a closed-form analytical expression for $\mathcal F$. For the sake
 in the analysis that follows we use $F$ to represent ${\mathcal F}(E)$ where
 the meaning is clear from context.
 
-\mysection{Potts Model}
-
+\mysubsection{Potts Model}
 The Potts model, also known as the uniform metric, specifies the pairwise potentials $\phi_{ab}(x_a, x_b)$ in equation (\ref{eq:energy_min}) as follows:
 \begin{equation}
     \phi_{ab}(x_a, x_b) = w_{ab} \cdot [x_a \neq x_b],
@@ -372,7 +372,7 @@ Proposition \ref{proposition:potts_worst-case optimal} paves the way for us to
 identify the worst-case optimal extension for hierarchical Potts model, which
 we discuss in the following section.
 
-\mysection{Hierarchical Potts Model}
+\mysubsection{Hierarchical Potts Model}
 \label{sec:rhst_worst-case optimal}
 
 Potts model imposes the same penalty for unequal assignment of labels to neighbouring variables, regardless of the label dissimilarity. A more natural approach is to vary the penalty based on how different the labels are. A hierarchical Potts model permits this by specifying the distance between labels using a tree with the following properties:
@@ -482,7 +482,57 @@ submodular extension for metric energies can be obtained using $F_{hier}$. Note
 that $F_{hier}$ reduces to $F_{Potts}$ for Potts model. One can see this by
 considering the Potts model as a star-shaped tree with edge weights as 0.5.
 
-\mysection{Higher-order Potts Model} The pairwise Potts model often fails
+\mysubsection{Fast Conditional Gradient Computation for Dense CRFs}
+\label{sec:dense_crf}
+
+\myparagraph{Dense CRF Energy Function} A dense CRF is specified by the following energy function 
+\begin{equation}
+    E({\bf x}) = \sum_{a \in {\mathcal X}} \phi_a(x_a) + \sum_{a \in {\mathcal X}} \sum_{b \in {\mathcal X}, b \neq a} \phi_{ab}(x_a, x_b).
+\end{equation}
+Note that every random variable is a neighbour of every other random variable in a dense CRF. Similar to previous work \citep{koltun2011efficient}, we consider the pairwise potentials to be to be Gaussian, that is, 
+\begin{align}
+    &\phi(i, j) = \mu(i, j) \sum_{m} w^{(m)} k({\bf f}_a^{(m)}, {\bf f}_b^{(m)}), \\
+    &k({\bf f}_a^{(m)}, {\bf f}_b^{(m)}) = \exp\left( \frac{- ||{\bf f}_a - {\bf f}_b ||^2}{2} \right).
+\end{align}
+The term $\mu(i,j)$ is known as {\it label compatibility} function between
+labels $i$ and $j$. Potts model and hierarchical Potts models are examples of
+$\mu(i, j)$. The other term is a mixture of Gaussian kernels $k(.,.)$ and is
+called the {\it pixel compatibility} function. The terms ${\bf f}_a^{(m)}$ are
+features that describe the random variable $X_a$. In practice, similar to
+\citep{koltun2011efficient}, we use $x, y$ coordinates and RGB values
+associated to a pixel as its features.
+
+Algorithm \ref{algo:fw_inference} assumes that the conditional gradient $\bf s^*$ in step {\ref{line:cond_grad}} can be computed efficiently. This is certainly not the case for dense CRFs, since computing $s^*$ involves $NL$ function evaluations of the submodular extension $F$, where $N$ is the number of variables, and $L$ is the number of labels. Each $F$ evaluation has complexity ${\mathcal O}(N)$ using the efficient Gaussian filtering algorithm of \citep{koltun2011efficient}. However, computation of $s^*$ would still be ${\mathcal O} (N^2)$ this way, which is clearly impractical for computer-vision applications where $N \sim 10^5 - 10^6$.
+
+However, using the equivalence of relaxed LP objectives and the Lovasz
+extension of submodular extensions in proposition
+\ref{proposition:potts_equiv}, we are able to compute $s^*$ in ${\mathcal
+O}(NL)$ time. Specifically, we use the algorithm of
+Ajanthan et al. \citep{ajanthan2017efficient}, which provides an efficient filtering procedure to compute the subgradient of the LP relaxation objective $E({\bf y})$ of (P-LP).\\
+%
+\vspace{-0.5cm}
+{\proposition Computing the subgradient of $E({\bf y})$ in (P-LP) is equivalent to computing the conditional gradient for the submodular function $F_{Potts}$. \label{proposition:subgrad}} 
+\newline(Proof in appendix).
+\begin{proof}
+  For the Potts model, we derived the worst-case optimal extension $F_{Potts}$ by
+  making its Lovasz extension $f({\bf y})$ same as the objective function
+    $E({\bf y})$ of the worst-case optimal LP relaxation. Hence, we have
+\begin{align}
+    E({\bf y}) &= f({\bf y})  \nonumber \\
+    {} &=  \max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle.\nonumber
+\end{align}
+
+The subdifferential of $E({\bf y})$ at $\bf y_0$ is the `active' linear function at $\bf y_0$. Hence,
+\begin{align}
+    \partial E({\bf y})|_{\bf y = y_0} &=  \argmax_{{\bf s} \in EP(F)} \langle {\bf y_0}, {\bf s} \rangle
+    \label{eq:subgrad}
+\end{align}
+Equation (\ref{eq:subgrad}) is equivalent to ${\bf s}^*$ computation in line \ref{line:cond_grad} of algorithm \ref{algo:fw_inference}, with ${\bf y_0} = - \nabla g({\bf s}_k)$.
+\end{proof}
+
+A similar observation can be made in case of hierarchical Potts model. Hence we have the first practical algorithm to compute upper bound of log-partition function of a dense CRF for Potts and metric energies.
+
+\mysection{Accurate Submodular Extension for Higher-order Potts Model} The pairwise Potts model often fails
 to capture useful image statistics because it restricts the order of the
 potentials to be at most two. Higher order clique potentials can model complex
 interactions of random variables, and thereby overcome this difficulty.
@@ -573,56 +623,6 @@ One can generalise this over more cliques, variables, and labels to show the equ
 The Lovasz extension of a set function is convex iff it is submodular. Since $E({\bf x})$
 is convex, this implies that $F_{HOPotts}$ is submodular. 
 \end{proof}
-
-\mysection{Fast Conditional Gradient Computation for Dense CRFs}
-\label{sec:dense_crf}
-
-\myparagraph{Dense CRF Energy Function} A dense CRF is specified by the following energy function 
-\begin{equation}
-    E({\bf x}) = \sum_{a \in {\mathcal X}} \phi_a(x_a) + \sum_{a \in {\mathcal X}} \sum_{b \in {\mathcal X}, b \neq a} \phi_{ab}(x_a, x_b).
-\end{equation}
-Note that every random variable is a neighbour of every other random variable in a dense CRF. Similar to previous work \citep{koltun2011efficient}, we consider the pairwise potentials to be to be Gaussian, that is, 
-\begin{align}
-    &\phi(i, j) = \mu(i, j) \sum_{m} w^{(m)} k({\bf f}_a^{(m)}, {\bf f}_b^{(m)}), \\
-    &k({\bf f}_a^{(m)}, {\bf f}_b^{(m)}) = \exp\left( \frac{- ||{\bf f}_a - {\bf f}_b ||^2}{2} \right).
-\end{align}
-The term $\mu(i,j)$ is known as {\it label compatibility} function between
-labels $i$ and $j$. Potts model and hierarchical Potts models are examples of
-$\mu(i, j)$. The other term is a mixture of Gaussian kernels $k(.,.)$ and is
-called the {\it pixel compatibility} function. The terms ${\bf f}_a^{(m)}$ are
-features that describe the random variable $X_a$. In practice, similar to
-\citep{koltun2011efficient}, we use $x, y$ coordinates and RGB values
-associated to a pixel as its features.
-
-Algorithm \ref{algo:fw_inference} assumes that the conditional gradient $\bf s^*$ in step {\ref{line:cond_grad}} can be computed efficiently. This is certainly not the case for dense CRFs, since computing $s^*$ involves $NL$ function evaluations of the submodular extension $F$, where $N$ is the number of variables, and $L$ is the number of labels. Each $F$ evaluation has complexity ${\mathcal O}(N)$ using the efficient Gaussian filtering algorithm of \citep{koltun2011efficient}. However, computation of $s^*$ would still be ${\mathcal O} (N^2)$ this way, which is clearly impractical for computer-vision applications where $N \sim 10^5 - 10^6$.
-
-However, using the equivalence of relaxed LP objectives and the Lovasz
-extension of submodular extensions in proposition
-\ref{proposition:potts_equiv}, we are able to compute $s^*$ in ${\mathcal
-O}(NL)$ time. Specifically, we use the algorithm of
-Ajanthan et al. \citep{ajanthan2017efficient}, which provides an efficient filtering procedure to compute the subgradient of the LP relaxation objective $E({\bf y})$ of (P-LP).\\
-%
-\vspace{-0.5cm}
-{\proposition Computing the subgradient of $E({\bf y})$ in (P-LP) is equivalent to computing the conditional gradient for the submodular function $F_{Potts}$. \label{proposition:subgrad}} 
-\newline(Proof in appendix).
-\begin{proof}
-  For the Potts model, we derived the worst-case optimal extension $F_{Potts}$ by
-  making its Lovasz extension $f({\bf y})$ same as the objective function
-    $E({\bf y})$ of the worst-case optimal LP relaxation. Hence, we have
-\begin{align}
-    E({\bf y}) &= f({\bf y})  \nonumber \\
-    {} &=  \max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle.\nonumber
-\end{align}
-
-The subdifferential of $E({\bf y})$ at $\bf y_0$ is the `active' linear function at $\bf y_0$. Hence,
-\begin{align}
-    \partial E({\bf y})|_{\bf y = y_0} &=  \argmax_{{\bf s} \in EP(F)} \langle {\bf y_0}, {\bf s} \rangle
-    \label{eq:subgrad}
-\end{align}
-Equation (\ref{eq:subgrad}) is equivalent to ${\bf s}^*$ computation in line \ref{line:cond_grad} of algorithm \ref{algo:fw_inference}, with ${\bf y_0} = - \nabla g({\bf s}_k)$.
-\end{proof}
-
-A similar observation can be made in case of hierarchical Potts model. Hence we have the first practical algorithm to compute upper bound of log-partition function of a dense CRF for Potts and metric energies.
 
 \mysection{Experiments}
 \label{sec:exp}
