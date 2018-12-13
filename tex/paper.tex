@@ -174,14 +174,22 @@ First, problem \eqref{eq:min_upper_bound} is convex. Second, as solving an LP ov
 \end{algorithmic}
 \end{algorithm}
 
-\mysection{Worst-case Optimal Submodular Extensions via LP Relaxations}
+\mysection{Accurate Submodular Extensions from LP Relaxations}
 
-\myparagraph{Worst-case Optimal Submodular Extensions} Different choices of extensions $F$ change the domain in problem \eqref{eq:min_upper_bound}, leading to different upper bounds on the log-partition function. How does one come up with an extension which yields the tightest bound? 
+\myparagraph{Relation between Marginal Estimation and LP Relaxation}
+Different choices of extensions $F$ change the domain in problem \eqref{eq:min_upper_bound}, leading to different upper bounds on the log-partition function. How does one come up with an extension which yields the tightest bound? 
 
+If we introduce a temperature parameter in $P({\bf x})$ (equation \eqref{eq:crf_prob_distrib}) by using $E({\bf x})/T$ and decrease $T$, the resulting distribution starts to peak more sharply around its mode. As $T \to 0$, marginal estimation becomes the same as MAP inference since the resulting distribution $P^0({\bf x})$ has mass 1 at its mode ${\bf x}^*$ and is 0 everywhere else. Given the MAP solution ${\bf x}^*$, one can compute the marginals as $P(X_i = j) = [x_i^* = j]$, where [.] is the Iverson bracket.
+
+  Motivated by this connection, we ask if one can introduce a temperature parameter to our problem \eqref{eq:min_upper_bound} and transform it to an LP relaxation in the limit $T \to 0$? We can then hope to use accurate LP relaxations of MAP problems known in literature to find good submodular extensionsfor different classes of energy functions. 
+
+We answer this question in affirmative. Specifically, in the following two sections we show how one can select the set encoding and submodular extension to convert problem \eqref{eq:min_upper_bound} to accurate LP relaxations for Potts, hierarchical Potts and higher-order Potts models. In fact, when the LP relaxation has tightness guarantees, we obtain worst-case optimal submodular extensions - a notion we elucidate shortly. 
+
+\myparagraph{Worst-case Optimal Submodular Extensions}
 In this paper, we focus on submodular extension families $\mathcal F(.)$ which
 for each instance of the energy function $E(.)$ belonging to a given class $\mathcal E$ gives a corresponding
-submodular extension ${\mathcal F}(E)$. We find the extension family ${\mathcal
-F}_{opt}$ that is \emph{worst-case optimal}. This implies that there does not
+submodular extension ${\mathcal F}(E)$. Our extensions are derived from LP relaxations. When the LP relaxation is the tightest known, the extension family ${\mathcal
+F}_{opt}$ we obtain is \emph{worst-case optimal}. This implies that there does not
 exist another submodular extension family ${\mathcal F}$ that gives a tighter
 upper bound for problem \eqref{eq:min_upper_bound} than ${\mathcal F}_{opt}$
 for all instances of the energy function in $\mathcal E$. Formally, 
@@ -191,16 +199,10 @@ for all instances of the energy function in $\mathcal E$. Formally,
     \forall \; E(.) \in \mathcal E.
     \label{eq:best_submod}
 \end{equation}
-Note that our problem is different from taking a given energy model and
-obtaining a submodular extension which is optimal for that model. Also, we seek
-a closed-form analytical expression for $\mathcal F$. For the sake of clarity,
+Note that the notion of worst-case optimality does not guarantee that the extension is best for every instance of the energy function. 
+Also, we seek a closed-form analytical expression for $\mathcal F$. For the sake of clarity,
 in the analysis that follows we use $F$ to represent ${\mathcal F}(E)$ where
-the meaning is clear from context. The two classes of energy functions we
-consider in this paper are Potts and hierarchical Potts families.
-%
-\myparagraph{Using LP Relaxations} If we introduce a temperature parameter in $P({\bf x})$ (equation \eqref{eq:crf_prob_distrib}) by using $E({\bf x})/T$ and decrease $T$, the resulting distribution starts to peak more sharply around its mode. As $T \to 0$, marginal estimation becomes the same as MAP inference since the resulting distribution $P^0({\bf x})$ has mass 1 at its mode ${\bf x}^*$ and is 0 everywhere else. Given the MAP solution ${\bf x}^*$, one can compute the marginals as $P(X_i = j) = [x_i^* = j]$, where [.] is the Iverson bracket.
-
-Motivated by this connection, we ask if one can introduce a temperature parameter to our problem \eqref{eq:min_upper_bound} and transform it to an LP relaxation in the limit $T \to 0$? We can then hope to use the tightest LP relaxations of MAP problems known in literature to find worst-case optimal submodular extensions. We answer this question in affirmative. Specifically, in the following two sections we show how one can select the set encoding and submodular extension to convert problem \eqref{eq:min_upper_bound} to the tightest known LP relaxations for Potts and hierarchical Potts models. Importantly, we prove the worst-case optimality of the extensions thus obtained. 
+the meaning is clear from context.
 
 \mysection{Potts Model}
 
