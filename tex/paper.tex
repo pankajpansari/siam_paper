@@ -250,7 +250,7 @@ divides $E({\bf x})$, or equivalently divides $\bf s$ belonging to $EP(F)$. Also
 submodular extension for Potts model for a chain graph of 4 variables, each of
 which can take 3 labels. The figure shows the way to compute the extension
 values of the set $A = \{v_{1, 1}, v_{4, 1}, v_{3, 2}$\}.}
-\label{fig:alternate}
+\label{fig:potts_extension_example}
 \end{figure}
 
 \begin{figure}
@@ -362,10 +362,7 @@ Extending the Lovasz extension of equation \eqref{eq:a-lovasz_ising} to all vari
 
 \end{proof}
 \vspace{-1mm}
-
-Proposition \ref{proposition:potts_worst-case optimal} paves the way for us to
-identify the worst-case optimal extension for hierarchical Potts model, which
-we discuss in the following section.
+Proposition \ref{proposition:potts_worst-case optimal} paves the way for us to identify the worst-case optimal extension for hierarchical Potts model, which we discuss in the following section. Figure (\ref{fig:potts_extension_example}) shows an example where we compute $F_{Potts}(A)$ for a small graph and a given set $A$ representing an invalid labeling. Figure (\ref{fig:optimal_extension_graph}) shows the $st$-graph representation of $F_{Potts}$ for a small instance.
 
 \mysubsection{Hierarchical Potts Model}
 \label{sec:rhst_worst-case optimal}
@@ -507,7 +504,6 @@ Ajanthan et al. \citep{ajanthan2017efficient}, which provides an efficient filte
 %
 \vspace{-0.5cm}
 {\proposition Computing the subgradient of $E({\bf y})$ in (P-LP) is equivalent to computing the conditional gradient for the submodular function $F_{Potts}$. \label{proposition:subgrad}} 
-\newline(Proof in appendix).
 \begin{proof}
   For the Potts model, we derived the worst-case optimal extension $F_{Potts}$ by
   making its Lovasz extension $f({\bf y})$ same as the objective function
