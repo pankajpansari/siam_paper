@@ -35,7 +35,7 @@ log-partition ~\citep{koltun2011efficient}. Fourthly, we obtain a good
 submodular extension for higher-order Potts model based on an accurate LP
 relaxation. Higher-order Potts model is a generalisation of the pairwise Potts
 model, and helps to capture interesting properties of the image that cannot be
-done using pairwise models~\citep{vineet2014filter, kohli2009robust}. We show that our upper-bounds on synthetic problems are comparable to those from tree reweighted message passing (TRW)
+done using pairwise models~\citep{vineet2014filter, kohli2007p3}. We show that our upper-bounds on synthetic problems are comparable to those from tree reweighted message passing (TRW)
 ~\citep{wainwright2005new} for the case of sparse CRFs. Unlike our approach,
 TRW is computationally infeasible for dense CRFs, thereby limiting its use in
 practice. Using pairwise dense CRF models, we perform stereo matching on standard
@@ -212,7 +212,7 @@ The pairwise Potts model, also known as the uniform metric, specifies the pairwi
 \end{equation}
 where $w_{ab}$ is the weight associated with edge $(a, b)$. There are no higher-order potential terms in this model as in equation (\ref{eq:energy_min}).
 %
-\myparagraph{Tightest LP Relaxation} Before describing our set encoding and submodular extension, we briefly outline the LP relaxation of the corresponding MAP estimation problem. To this end, we define indicator variables $y_{ai}$ which equal 1 if $X_a = i$, and 0 otherwise. The following LP relaxation is the tightest known for Potts model in the worst-case, assuming the Unique Games Conjecture to be true \citep{manokaran2008sdp}
+\myparagraph{Tightest LP Relaxation} Before describing our set encoding and submodular extension, we briefly outline the LP relaxation of the corresponding MAP estimation problem. To this end, we define indicator variables $y_{ai}$ which equal 1 if $X_a = i$, and 0 otherwise. The following LP relaxation is the tightest known for Potts model in the worst-case, assuming the Unique Games Conjecture to be true \citep{manokaran2008sdp}:
 \begin{align}
     \text{(P-LP)} \quad \min_{\bf y} \enskip & E({\bf y}) =  \sum_{a} \sum_{i} \phi_a(i)y_{ai} + \nonumber\\
      &\sum_{(a, b) \in {\mathcal N}} \sum_{i} \frac{w_{ab}}{2} \cdot |y_{ai} - y_{bi}| \nonumber\\
@@ -528,9 +528,8 @@ to capture useful image statistics because it restricts the order of the
 potentials to be at most two. Higher order clique potentials can model complex
 interactions of random variables, and thereby overcome this difficulty.
 
-The simplest generalisation of pairwise Potts model to higher-order results in
-\textit{higher-order Potts model}. The clique potentials for these models are
-defined as
+One of the higher-order models used in practice is the \textit{higher-order Potts} model \citep{kappes2016higher}. For this model, the clique potentials $\phi_c({\bf x})$ in 
+the energy function (equation (\ref{eq:energy_hop_min})) are defined as
 
 \begin{equation}
   \phi_c({\bf x}_c) = 
@@ -540,18 +539,24 @@ defined as
   \end{cases} 
 \end{equation}
 
+The higher-order Potts model differs from the $P^n$ Potts model \citep{kohli2007p3} in that the penalty for homogeneous labelings $\gamma_0$ is invariant to the label, that is, does not depend upon the label. We found this invariance property important in deriving the submodular extension from the LP relaxation.
+
 \myparagraph{LP Relaxation}
+We state the LP relaxation of the MAP estimation problem for higher-order Potts model. Let us assume the pairwise potentials in equation (\ref{eq:energy_hop_min}) to be Potts model. Also, we use the same set of indicator variables as for the Potts model. The following is an accurate LP relaxation for the higher-order Potts model:
+
 \begin{align}
     \text{(HOP-LP)} \quad \min_{\bf y} \enskip & E({\bf y}) =  \sum_{a = 1}^N
-    \sum_{i = 1}^L \phi_a(i)y_{ai} + \nonumber\\
-    &\sum_{c \in {\mathcal C}} \max_{(a, b) \in c} \frac{w_c}{2} \sum_{i = 1}^L \cdot |y_{ai} - y_{bi}| \nonumber\\
+    \sum_{i = 1}^L \phi_a(i)y_{ai} + 
+    \sum_{(a, b) \in {\mathcal N}} \sum_{i} \frac{w_{ab}}{2} \cdot |y_{ai} - y_{bi}| \nonumber\\
+    & + \quad \sum_{c \in {\mathcal C}} \max_{(a, b) \in c} \frac{w_c}{2} \sum_{i = 1}^L \cdot |y_{ai} - y_{bi}| \nonumber\\
     \text{s.t} \quad &{\bf y} \in \Delta.
 \label{eq:hop-lp}
 \end{align}
-The constraints for (HOP-LP) are the same as for (P-LP).
 
+The objective function is similar to that for the Potts model along with the addition of terms corresponding to higher-order potentials.The constraints for (HOP-LP) are the same as for (P-LP). To the best of our knowledge, the above LP relaxation does not have worst-case tightness guarantee, hence the submodular extension we derive using it does not have worst-case optimality property.
+ 
 \myparagraph{LP-based Submodular Extension} We use the same $1-of-L$ encoding
-scheme as for Potts model. In a similar way, problem can be rewritten as
+scheme as for Potts model. Problem \ref{eq:min_upper_bound} then factorises as: 
 
 %Same as eq 5.4
 \begin{equation}
@@ -580,11 +585,14 @@ extension.
 {\proposition The Lovasz extension of the following submodular extension for
   higher-order Potts model:
   \begin{align}
-      F_{HOPotts}(A) &= \sum_a \sum_i \phi_{a}(i) [|A \cap \{v_{ai}\}| = 1] + \nonumber \\
+      F_{HOPotts}(A) &= F_{Potts}(A) + \nonumber \\
         &\sum_{c \in {\mathcal C}} \max_{(a, b) \in c} \frac{w_c}{2} \sum_{i = 1}^L [|A \cap \{v_{ai}, v_{bi}\}| = 1]
 \end{align}
 is the objective function $E({\bf y})$ of the LP relaxation (HOP-LP).
 \label{proposition:hop_extension}}
+\newline
+We note that the component of the submodular extension corresponding to cliques is of the form of maximum of cut function (that are submodular) over all pairs in a clique. In general, maximum of submodular functions is not submodular. However, in our particular case, the maximum turns out to be submodular as shown in the proof below. 
+
 \begin{proof}
   We first observe that $\forall {\bf y} \in {\mathcal L}^N$, that is, for all
   valid labelings, $F_{HOPotts}(A_{\bf y})$ equals $E({\bf y}$.  Hence, $F_{HOPotts}$
