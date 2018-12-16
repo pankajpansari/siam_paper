@@ -532,6 +532,7 @@ A higher-order model useful in real-world applications is the \textit{diversity}
  
 \begin{equation}
   \phi_c({\bf x}_c) = \omega_c|\Gamma({\bf x_c})|
+\label{eq:diversity_potential}
 \end{equation}
 where the notation $|A|$ denotes the cardinality of a set A.
 
@@ -540,7 +541,7 @@ where the notation $|A|$ denotes the cardinality of a set A.
 First, let us consider the IP formulation of the MAP problem for our diversity model. Using the same set of indicator variables $y_{ai} = \{0, 1\}$ as for the Potts model, which are binary now, the clique potential $\phi({\bf x_c})$ can be represented as
 
 \begin{equation}
-  \phi_c({\bf x}_c) = \omega_c \sum_{i = 1}^L \max_{(a, b) \in c} \cdot |y_{ai} - y_{bi}| 
+  \phi_c({\bf x}_c) = \omega_c \cdot \sum_{i = 1}^L \max_{(a, b) \in c} |y_{ai} - y_{bi}| 
 \label{eq:hod_ip}
 \end{equation}
 
@@ -554,7 +555,7 @@ We now relax the indicator variables $y_{ai}$ to lie in $[0, 1]$. Assuming the p
     \text{(HOD-LP)} \quad \min_{\bf y} \enskip & E({\bf y}) =  \sum_{a = 1}^N
     \sum_{i = 1}^L \phi_a(i)y_{ai} + 
     \sum_{(a, b) \in {\mathcal N}} \sum_{i} \frac{w_{ab}}{2} \cdot |y_{ai} - y_{bi}| \nonumber\\
-    & + \quad \sum_{c \, \in {\mathcal C}} \frac{w_c}{2} \sum_{i = 1}^L \max_{(a, b) \in c} \cdot |y_{ai} - y_{bi}| \nonumber\\
+    & + \quad \sum_{c \, \in {\mathcal C}} w_c \cdot \sum_{i = 1}^L \max_{(a, b) \in c} |y_{ai} - y_{bi}| \nonumber\\
     \text{s.t} \quad &{\bf y} \in \Delta.
 \label{eq:hop-lp}
 \end{align}
@@ -584,49 +585,46 @@ and considering the limit $T \to 0$, problem (\ref{eq:hop_temp}) becomes
     - \min_{{\bf y} \in \Delta} f({\bf y}) 
 \end{align}
 where $f(.)$ is the Lovasz extension of $F(.)$. We are interested in making
-this LP same as (HOD-LP) of equation (\ref{eq:hop-lp}), thereby enabling us to recover the submodular extension
-for higher-order diversity model. The following proposition gives us the submodular
-extension.
-{\proposition The Lovasz extension of the following submodular extension for
-  our higher-order diversity model
+this LP same as (HOD-LP) of equation (\ref{eq:hop-lp}), thereby enabling us to recover the submodular extension for higher-order diversity model. The following lemma will be of use to us in indentifying the extension.
+
+{\lemma The Lovasz extension of the following set function 
   \begin{align}
-      F_{HOD}(A) &= F_{Potts}(A) + \nonumber \\
-        &\sum_{c \in {\mathcal C}} \frac{w_c}{2} \sum_{i = 1}^L \max_{(a, b) \in c} [|A \cap \{v_{ai}, v_{bi}\}| = 1]
+      F_{HOD}(A) &= F_{Potts}(A) + \nonumber \sum_{c \in {\mathcal C}} w_c \cdot \sum_{i = 1}^L \max_{(a, b) \in c} [|A \cap \{v_{ai}, v_{bi}\}| = 1]
+\label{hod_submodular}
 \end{align}
 is the objective function $E({\bf y})$ of the LP relaxation (HOD-LP).
-\label{proposition:hod_extension}}
+\label{lemma:hod_extension}}
 \newline
-We note that the component of the submodular extension corresponding to cliques is of the form of maximum of cut function (that are submodular) over all pairs in a clique. In general, maximum of submodular functions is not submodular. However, in our particular case, the maximum turns out to be submodular as shown in the proof below. 
+We note that the component of the submodular extension corresponding to cliques is of the form of maximum of cut function (that are submodular) over all pairs in a clique. In general, maximum of submodular functions is not submodular. However, in our particular case, the maximum turns out to be submodular as shown in the proof below. Our proof makes use of the following property:
 
 \begin{proof}
-  We first observe that $\forall {\bf y} \in {\mathcal L}^N$, that is, for all
-  valid labelings, $F_{HOPotts}(A_{\bf y})$ equals $E({\bf y}$.  Hence, $F_{HOPotts}$
-    is an extension. 
+ Making use of proposition \ref{proposition:potts_worst-case optimal}, it will be sufficient for us to show that the Lovasz extension of the $i$-th Ising model $F_i(A) = \max_{(a, b) \in c} [|A \cap \{v_{ai}, v_{bi}\}| = 1]$ is $\max_{(a, b) \in c} |y_{ai} - y_{bi}|$.
 
-Consider a clique with 3 variables $X_a, X_b, X_c$
-each of which can take one of three labels $i = 1, 2, 3$. Then ${\bf x}
-= [x_{a1}, x_{a2},x_{a3},x_{b1},x_{b2},x_{b3},x_{c1},x_{c2},x_{c3}]$ is the
-vector of relaxed variables. To compute $E({\bf x})$ and $f({\bf x})$, it will
-suffice to specify per label ordering. So let us assume $x_{a1} > x_{b1}
-> x_{c1}$, $x_{a2} > x_{b2} > x_{c2}$ and $x_{a3} > x_{b3} > x_{c3}$.
-
-Then, the relaxed objective is
-
+Let the clique $c$ have $M$ variables. Given ${\bf y} \in [0, 1]^M$, let us order its components in decreasing order $y_{j_1} > \dots > y_{j_M}$ , where $(j_1,\dots, j_M)$ is a permutation. Then the Lovasz extension of $F_i()$ is:
 \begin{equation}
-  E({\bf x}) = \frac{w_c}{2} \cdot [(x_{a1} - x_{c1}) + (x_{a2} - x_{c2}) +(x_{a3} - x_{c3})  ]
+f_i({\bf y}) = \sum_{k = 1}^M y_{j_k} [F_i(\{j_1, \dots, j_k\}) - F_i(\{j_1, \dots, j_{k - 1}\})]
+\nonumber
 \end{equation}
 
-It can be shown that regardless of inter-labeling rankings, the L.E is given
-by:
-
-\begin{equation}
-  f({\bf x}) = \frac{w_c}{2} \cdot [(x_{a1} - x_{c1}) + (x_{a2} - x_{c2}) +(x_{a3} - x_{c3})  ]
-\end{equation}
-
-One can generalise this over more cliques, variables, and labels to show the equivalence of $E({\bf x})$ and $f({\bf x})$.
-The Lovasz extension of a set function is convex iff it is submodular. Since $E({\bf x})$
-is convex, this implies that $F_{HOPotts}$ is submodular. 
+We note that when $A = \{ \}$ or $\{j_1, \dots, j_M\}$, that is, when $A$ represents homogeneous labelings, $F_i(A) = 0$. For any other $A \subset \{j_1, \dots, j_M\}$, $F_i(A) = 1$. Hence, the Lovasz extension simplifies to
+\begin{align}
+f_i({\bf y}) &= y_{j_1} - y_{j_M} \nonumber \\
+&= \max_{(a, b) \in c} |y_{ai} - y_{bi}| \nonumber
+\end{align}
+This proves our lemma.
 \end{proof}
+
+We are now in a position to state our main result:
+
+{\proposition The set function $F_{HOD}$ of lemma \ref{lemma:hod_extension} is the submodular extension of our higher-order diversity model whose Lovasz extension is $E({\bf y})$ in problem (HOD-LP).} 
+
+\begin{proof}
+We first observe that $\forall {\bf y} \in {\mathcal L}^N$, that is, for all valid labelings, $F_{HOD}(A_{\bf y})$ equals $E({\bf y})$.  Hence, $F_{HOD}$ is an extension. 
+
+Also, we showed in lemma \ref{lemma:hod_extension} that the Lovasz extension of $F_{HOD}$ is $E({\bf y})$ in probem (HOD-LP). $E({\bf y})$ being a sum of terms corresponding to maximum of linear functions, is convex. The convexity of Lovasz extension implies submodularity of the set function \citep{bach2013learning}. Hence, $F_{HOD}$ is submodular. 
+\end{proof}
+ 
+We now show the effectiveness of the accurate submodular extensions for different classes of models by means of experiments on synthetic and real-world datasets.
 
 \mysection{Experiments}
 \label{sec:exp}
@@ -818,26 +816,26 @@ appendix.
 \end{figure*}
 
 
-\mysubsection{Stereo Matching using Higher-order Potts Model}
-\label{subsec:stereo_hop}
-\myparagraph{Data} Next, we use the higher-order Potts model for stereo matching on the Middlebury dataset. Higher-order Potts model is suitable to be used for only some images in the dataset, since others have gradually sloping surfaces and higher-order cliques will force all pixels on these surfaces to take similar disparity values.  We take a dense CRF model with Potts compatibility term and Gaussian pairwise potentials, and augment it with higher-order Potts term. We obtain higher-order cliques by using super-pixels obtained from mean-shift algorithm \citep{comaniciu2002mean}.
-
-\myparagraph{Method} We again use the modified Gaussian filtering implementation for dense CRFs by
-\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
-To compute the contribution of the higher-order Potts, we make use of an
-efficient strategy to reuse computation. Recall that computing the conditional
-gradient coordinates $s^*_{\sigma(i)}$ requires us to obtain differences of the
-nested sets $F(S_i) - F(S_{i - 1})$. We store the clique state at each $i$, and
-this enables us to compute the difference for each coordinate in a constant
-amount of time. In this case, computation of conditional gradient takes
-$\mathcal{O}(cNL)$ where $c$ is the number of higher-order cliques. We ran our
-algorithm for 200 iterations.
-
-\myparagraph{Results} Figure \ref{fig:stereo_hop} shows some example solutions
-obtained by picking the label with maximum marginal probability for each
-variable. We observe that our method gives results that are reasonably close to
-the ground-truth. The set of hyperparameters that we used can be found in the
-appendix.
+%\mysubsection{Stereo Matching using Higher-order Potts Model}
+%\label{subsec:stereo_hop}
+%\myparagraph{Data} Next, we use the higher-order Potts model for stereo matching on the Middlebury dataset. Higher-order Potts model is suitable to be used for only some images in the dataset, since others have gradually sloping surfaces and higher-order cliques will force all pixels on these surfaces to take similar disparity values.  We take a dense CRF model with Potts compatibility term and Gaussian pairwise potentials, and augment it with higher-order Potts term. We obtain higher-order cliques by using super-pixels obtained from mean-shift algorithm \citep{comaniciu2002mean}.
+%
+%\myparagraph{Method} We again use the modified Gaussian filtering implementation for dense CRFs by
+%\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
+%To compute the contribution of the higher-order Potts, we make use of an
+%efficient strategy to reuse computation. Recall that computing the conditional
+%gradient coordinates $s^*_{\sigma(i)}$ requires us to obtain differences of the
+%nested sets $F(S_i) - F(S_{i - 1})$. We store the clique state at each $i$, and
+%this enables us to compute the difference for each coordinate in a constant
+%amount of time. In this case, computation of conditional gradient takes
+%$\mathcal{O}(cNL)$ where $c$ is the number of higher-order cliques. We ran our
+%algorithm for 200 iterations.
+%
+%\myparagraph{Results} Figure \ref{fig:stereo_hop} shows some example solutions
+%obtained by picking the label with maximum marginal probability for each
+%variable. We observe that our method gives results that are reasonably close to
+%the ground-truth. The set of hyperparameters that we used can be found in the
+%appendix.
 
 \mysection{Discussion}
 \label{sec:conclude}
