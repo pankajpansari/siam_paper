@@ -94,10 +94,10 @@ A CRF is defined as a graph on a set of random variables ${\mathcal X} = \{X_1,\
 %
 where $\phi_a$ and $\phi_{ab}$ are the unary and pairwise potentials respectively. In computer vision, we often think of $\mathcal X$ as arranged on a grid. A \emph{sparse CRF} has $\mathcal N$ defined by 4-connected or 8-connected neighbourhood relationships. In a \emph{dense CRF}, on the other hand, every variable is connected to every other variable.
 
-We can augment the above pairwise models with higher-order potentials. Let $\mathcal C$ be the set of cliques, which can, for instance, be the set of superpixels from an image segmentation method. Also, let $\bf x_c$ be the component of $\bf x$ formed by elements in clique $c$. The energy function now also contains higher-order potentials 
+We can augment the above pairwise models with higher-order potentials. Let $\mathcal C$ be the set of cliques, that is, fully-connected groups of variables. These cliques can, for instance, be the set of superpixels from an image segmentation method. Also, let ${\bf x}_c$ be the component of $\bf x$ formed by elements in clique $c$. The energy function now also contains higher-order potentials 
 %
 \begin{equation}
-    E({\bf x}) = \sum_{a \in {\mathcal X}} \phi_a(x_a) + \sum_{(a, b) \in {\mathcal N}} \phi_{ab}(x_a, x_b) + \sum_{c \in {\mathcal C}} \phi_c({\bf x_c}),
+    E({\bf x}) = \sum_{a \in {\mathcal X}} \phi_a(x_a) + \sum_{(a, b) \in {\mathcal N}} \phi_{ab}(x_a, x_b) + \sum_{c \in {\mathcal C}} \phi_c({{\bf x}_c}),
     \label{eq:energy_hop_min}
   \end{equation}
 %
@@ -525,17 +525,17 @@ to capture useful image statistics because it restricts the order of the
 potentials to be at most two. Higher order clique potentials can model complex
 interactions of random variables, and thereby overcome this difficulty.
 
-A higher-order model useful in real-world applications is the \textit{diversity} model, that favours labeling where superpixels have fewer number of unique labels. As an example from semantic segmentation, it is preferable to have pixels belonging to a superpixel to be incorrectly labeled with two class labels rather than three or more class labels. Let $\Gamma({\bf x_c})$ be the set of unique labels assigned to variables in the clique $c$, and $\omega_c$ be the weight associated with the clique. In our case, we take the clique potentials as proportional to the number of unique labels in the clique $c$:
+A higher-order model useful in real-world applications is the \textit{diversity} model, that favours labeling where superpixels have fewer number of unique labels. As an example from semantic segmentation, it is preferable to have pixels belonging to a superpixel to be incorrectly labeled with two class labels rather than three or more class labels. Let $\Gamma({\bf x}_c)$ be the set of unique labels assigned to variables in the clique $c$, and $\omega_c$ be the weight associated with the clique. In our case, we take the clique potentials as proportional to the number of unique labels in the clique $c$:
  
 \begin{equation}
-  \phi_c({\bf x}_c) = \omega_c|\Gamma({\bf x_c})|
+  \phi_c({\bf x}_c) = \omega_c|\Gamma({\bf x}_c)|
 \label{eq:diversity_potential}
 \end{equation}
 where the notation $|A|$ denotes the cardinality of a set A.
 
 \myparagraph{LP Relaxation}
 
-First, let us consider the IP formulation of the MAP problem for our diversity model. Using the same set of indicator variables $y_{ai} = \{0, 1\}$ as for the Potts model, which are binary now, the clique potential $\phi({\bf x_c})$ can be represented as
+First, let us consider the IP formulation of the MAP problem for our diversity model. Using the same set of indicator variables $y_{ai} = \{0, 1\}$ as for the Potts model, which are binary now, the clique potential $\phi({\bf x}_c)$ can be represented as
 
 \begin{equation}
   \phi_c({\bf x}_c) = \omega_c \cdot \sum_{i = 1}^L \max_{(a, b) \in c} |y_{ai} - y_{bi}| 
