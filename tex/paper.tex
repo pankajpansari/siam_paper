@@ -181,12 +181,13 @@ If we introduce a temperature parameter in $P({\bf x})$ (equation \eqref{eq:crf_
 
 We answer this question in affirmative. Specifically, in the following two sections we show how one can select the set encoding and submodular extension to convert problem \eqref{eq:min_upper_bound} to accurate LP relaxations for Potts, hierarchical Potts and higher-order diversity models. In fact, when the LP relaxation has tightness guarantees, we obtain worst-case optimal submodular extensions - a notion we elucidate shortly. 
 
+In this paper, we focus on submodular extension families $\mathcal F(.)$ corresponding to different classes of energy functions $\mathcal E$. Given an instance of the energy function $E(.)$ from the class $\mathcal E$,  there is a corresponding submodular extension ${\mathcal F}(E)$. Also, we seek a closed-form analytical expression for $\mathcal F$. 
+
 \mysection{Worst-case Optimal Submodular Extensions}
 
 \myparagraph{Worst-case Optimality}
-In this paper, we focus on submodular extension families $\mathcal F(.)$ which
-for each instance of the energy function $E(.)$ belonging to a given class $\mathcal E$ gives a corresponding
-submodular extension ${\mathcal F}(E)$. Our extensions are derived from LP relaxations. When the LP relaxation is the tightest known, the extension family ${\mathcal
+
+Our extensions are derived from LP relaxations. When the LP relaxation is the tightest known, the extension family ${\mathcal
 F}_{opt}$ we obtain is \emph{worst-case optimal}. This implies that there does not
 exist another submodular extension family ${\mathcal F}$ that gives a tighter
 upper bound for problem \eqref{eq:min_upper_bound} than ${\mathcal F}_{opt}$
@@ -197,12 +198,12 @@ for all instances of the energy function in $\mathcal E$. Formally,
     \forall \; E(.) \in \mathcal E.
     \label{eq:best_submod}
 \end{equation}
-Note that the notion of worst-case optimality does not guarantee that the extension is best for every instance of the energy function. 
-Also, we seek a closed-form analytical expression for $\mathcal F$. For the sake of clarity,
-in the analysis that follows we use $F$ to represent ${\mathcal F}(E)$ where
-the meaning is clear from context.
+Note that the notion of worst-case optimality does not guarantee that the extension is best for every instance of the energy function. It may be possible to solve an optimisation problem to obtain the best extension for every given instace of energy $E(.)$. However, in this paper, we do not take that approach, and instead provide a general solution for a given class of energy function. 
+
+In subsection \ref{subsec:potts}, we prove the worst-case optimality of the submodular extension used in literature for the Potts model. In subsection \ref{subsec:hier_potts}, we obtain worst-case optimal submodular extension for the more general hierarchical Potts model. Finally, in subsection \ref{subsec:dense_crf}, we provide an approach to make our inference algorithm efficient for the dense CRF model. Using our approach, the inference algorithm has linear time-complexity in the number of variables and labels.
 
 \mysubsection{Pairwise Potts Model}
+\label{subsec:potts}
 The pairwise Potts model, also known as the uniform metric, specifies the pairwise potentials $\phi_{ab}(x_a, x_b)$ in equation (\ref{eq:energy_min}) as follows:
 \begin{equation}
     \phi_{ab}(x_a, x_b) = w_{ab} \cdot [x_a \neq x_b],
@@ -362,7 +363,7 @@ Extending the Lovasz extension of equation \eqref{eq:a-lovasz_ising} to all vari
 Proposition \ref{proposition:potts_worst-case optimal} paves the way for us to identify the worst-case optimal extension for hierarchical Potts model, which we discuss in the following section. Figure (\ref{fig:potts_extension_example}) shows an example where we compute $F_{Potts}(A)$ for a small graph and a given set $A$ representing an invalid labeling. Figure (\ref{fig:optimal_extension_graph}) shows the $st$-graph representation of $F_{Potts}$ for a small instance.
 
 \mysubsection{Hierarchical Potts Model}
-\label{sec:rhst_worst-case optimal}
+\label{subsec:hier_potts}
 
 Potts model imposes the same penalty for unequal assignment of labels to neighbouring variables, regardless of the label dissimilarity. A more natural approach is to vary the penalty based on how different the labels are. A hierarchical Potts model permits this by specifying the distance between labels using a tree with the following properties:
 \vspace{2mm}
@@ -472,7 +473,7 @@ that $F_{hier}$ reduces to $F_{Potts}$ for Potts model. One can see this by
 considering the Potts model as a star-shaped tree with edge weights as 0.5.
 
 \mysubsection{Fast Conditional Gradient Computation for Dense CRFs}
-\label{sec:dense_crf}
+\label{subsec:dense_crf}
 
 \myparagraph{Dense CRF Energy Function} A dense CRF is specified by the following energy function 
 \begin{equation}
