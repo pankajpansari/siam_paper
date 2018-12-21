@@ -735,26 +735,31 @@ method. TRW makes use of the standard LP relaxation \citep{chekuri2004linear} wh
 
 \begin{figure*}
     \centering
-\begin{tabular}{cccccc}
-        \includegraphics[scale = 0.14]{\imagePath/stereo/venus_GT} &
-        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/venus_left_mf} &
-        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/venus_left_submod} &
+\begin{tabular}{ccc}
+        \includegraphics[scale = 0.24]{\imagePath/stereo/venus_GT} &
+        \includegraphics[scale = 0.24]{\imagePath/stereo/potts/venus_left_mf} &
+        \includegraphics[scale = 0.24]{\imagePath/stereo/potts/venus_left_submod} \\
     %
-        \includegraphics[scale = 0.19]{\imagePath/stereo/tsukuba_GT} &
-        \includegraphics[scale = 0.19]{\imagePath/stereo/potts/tsukuba_left_mf} &
-        \includegraphics[scale = 0.19]{\imagePath/stereo/potts/tsukuba_left_submod} \\
-        \scriptsize(a) Venus GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution & \scriptsize(a) Tsukuba GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution\\
-        {} & \scriptsize  60.32s, 1.83e+07 &  \scriptsize 469.75s, {\bf 1.55e+07} & {} & \scriptsize  14.93s, 8.21e+06 & \scriptsize 215.22s, {\bf 4.12e+06} \\
-         \includegraphics[scale = 0.14]{\imagePath/stereo/cones_GT} &
-        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/cones_left_mf} &
-        \includegraphics[scale = 0.14]{\imagePath/stereo/potts/cones_left_submod} &
+        \scriptsize(a) Venus GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution \\ 
+        {} & \scriptsize  60.32s, 1.83e+07 &  \scriptsize 469.75s, {\bf 1.55e+07}  \\
+        \includegraphics[scale = 0.27]{\imagePath/stereo/tsukuba_GT} &
+        \includegraphics[scale = 0.27]{\imagePath/stereo/potts/tsukuba_left_mf} &
+        \includegraphics[scale = 0.27]{\imagePath/stereo/potts/tsukuba_left_submod} \\
+        \scriptsize(a) Tsukuba GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution\\
+        {} & \scriptsize  14.93s, 8.21e+06 & \scriptsize 215.22s, {\bf 4.12e+06} \\
+
+        \includegraphics[scale = 0.24]{\imagePath/stereo/cones_GT} &
+        \includegraphics[scale = 0.24]{\imagePath/stereo/potts/cones_left_mf} &
+        \includegraphics[scale = 0.24]{\imagePath/stereo/potts/cones_left_submod} \\
+        \scriptsize(a) Cones GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution \\
+        {} & \scriptsize 239.14s, 2.68e+07 &  \scriptsize 1082.72s, {\bf 1.27e+07} \\ 
         %
        %
-         \includegraphics[scale = 0.15]{\imagePath/stereo/teddy_GT} &
-        \includegraphics[scale = 0.15]{\imagePath/stereo/potts/teddy_left_mf} &
-        \includegraphics[scale = 0.15]{\imagePath/stereo/potts/teddy_left_submod} \\
-    \scriptsize(a) Cones GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution & \scriptsize(a) Teddy GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution\\
-        {} & \scriptsize 239.14s, 2.68e+07 &  \scriptsize 1082.72s, {\bf 1.27e+07} & {} & \scriptsize 555.30s, 2.36e+07 & \scriptsize 1257.86s, {\bf 1.58e+07}\\
+         \includegraphics[scale = 0.25]{\imagePath/stereo/teddy_GT} &
+        \includegraphics[scale = 0.25]{\imagePath/stereo/potts/teddy_left_mf} &
+        \includegraphics[scale = 0.25]{\imagePath/stereo/potts/teddy_left_submod} \\
+        \scriptsize(a) Teddy GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution\\
+        {} & \scriptsize 555.30s, 2.36e+07 & \scriptsize 1257.86s, {\bf 1.58e+07}\\
 \end{tabular}
 %\vspace{2mm}
 \mycaption{\footnotesize \em Stereo matching using dense CRFs with Potts
@@ -787,33 +792,32 @@ compared to mean-field is 0.943. The avearge time ratio is 10.66. We observe tha
 appendix.
 
 
-\begin{figure*}
-    \centering
-\begin{tabular}{cccccc}
-        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_GT} &
-        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_hop} &
-        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/baby1_GT} &
-        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/baby1_hop} &
-        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/flowerpots_GT} &
-        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/flowerpots_hop} \\
-        \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution
-        & \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution
-        & \scriptsize(a) Flowerpots GT & \scriptsize(b) Submod solution\\
-        {} & {} 
-        & {} & \scriptsize 2476.82s
-        & {} & \scriptsize 2471.58s\\
-
-\end{tabular}
-%\vspace{2mm}
-\mycaption{\footnotesize \em Stereo matching using dense CRFs with higher-order
-  Potts term in addition to Potts compatibility and Gaussian pairwise potentials.}
-\label{fig:stereo_hop}
-\end{figure*}
-
-
-%\mysubsection{Stereo Matching using Higher-order Potts Model}
+%\begin{figure*}
+%    \centering
+%\begin{tabular}{cccccc}
+%        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_GT} &
+%        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_hop} &
+%        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/baby1_GT} &
+%        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/baby1_hop} &
+%        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/flowerpots_GT} &
+%        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/flowerpots_hop} \\
+%        \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution
+%        & \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution
+%        & \scriptsize(a) Flowerpots GT & \scriptsize(b) Submod solution\\
+%        {} & {} 
+%        & {} & \scriptsize 2476.82s
+%        & {} & \scriptsize 2471.58s\\
+%
+%\end{tabular}
+%%\vspace{2mm}
+%\mycaption{\footnotesize \em Stereo matching using dense CRFs with higher-order
+%  Potts term in addition to Potts compatibility and Gaussian pairwise potentials.}
+%\label{fig:stereo_hop}
+%\end{figure*}
+%
+%\mysubsection{Stereo Matching using Higher-order Diversity Model}
 %\label{subsec:stereo_hop}
-%\myparagraph{Data} Next, we use the higher-order Potts model for stereo matching on the Middlebury dataset. Higher-order Potts model is suitable to be used for only some images in the dataset, since others have gradually sloping surfaces and higher-order cliques will force all pixels on these surfaces to take similar disparity values.  We take a dense CRF model with Potts compatibility term and Gaussian pairwise potentials, and augment it with higher-order Potts term. We obtain higher-order cliques by using super-pixels obtained from mean-shift algorithm \citep{comaniciu2002mean}.
+%\myparagraph{Data} Next, we use the higher-order diversity model for stereo matching on the Middlebury dataset. Higher-order Potts model is suitable to be used for only some images in the dataset, since others have gradually sloping surfaces and higher-order cliques will force all pixels on these surfaces to take similar disparity values.  We take a dense CRF model with Potts compatibility term and Gaussian pairwise potentials, and augment it with higher-order Potts term. We obtain higher-order cliques by using super-pixels obtained from mean-shift algorithm \citep{comaniciu2002mean}.
 %
 %\myparagraph{Method} We again use the modified Gaussian filtering implementation for dense CRFs by
 %\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
@@ -831,6 +835,12 @@ appendix.
 %variable. We observe that our method gives results that are reasonably close to
 %the ground-truth. The set of hyperparameters that we used can be found in the
 %appendix.
+
+\mysubsection{Stereo Matching using Higher-order Diversity Model}
+TO-DO
+
+\mysubsection{Stereo Matching using Higher-order Diversity Model}
+TO-DO
 
 \mysection{Discussion}
 \label{sec:conclude}
