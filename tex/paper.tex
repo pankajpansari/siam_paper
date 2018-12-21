@@ -526,7 +526,7 @@ to capture useful image statistics because it restricts the order of the
 potentials to be at most two. Higher order clique potentials can model complex
 interactions of random variables, and thereby overcome this difficulty.
 
-A higher-order model useful in real-world applications is the \textit{diversity} model, that favours labeling where superpixels have fewer number of unique labels. As an example from semantic segmentation, it is preferable to have pixels belonging to a superpixel to be incorrectly labeled with two class labels rather than three or more class labels. Let $\Gamma({\bf x}_c)$ be the set of unique labels assigned to variables in the clique $c$, and $\omega_c$ be the weight associated with the clique. In our case, we take the clique potentials as proportional to the number of unique labels in the clique $c$:
+A higher-order model useful in real-world applications is the \textit{diversity} model, which favours labeling where variables in a clique have fewer number of unique labels. For instance, in semantic segmentataion we often first obtain superpixels from an image segmentation method, which we consider as cliques in our model. We expect the labeling in a superpixel to be homogeneous. As a result, it is preferable to have pixels belonging to a superpixel to be incorrectly labeled with two class labels rather than three or more class labels. Let $\Gamma({\bf x}_c)$ be the set of unique labels assigned to variables in the clique $c$, and $\omega_c$ be the weight associated with the clique. In our case, we take the clique potentials as proportional to the number of unique labels in the clique $c$:
  
 \begin{equation}
   \phi_c({\bf x}_c) = \omega_c|\Gamma({\bf x}_c)|
@@ -543,10 +543,8 @@ First, let us consider the IP formulation of the MAP problem for our diversity m
 \label{eq:hod_ip}
 \end{equation}
 
-For example, let the set of unique labels in a clique be $\Gamma = \{l_1, l_2, l_3\}$. This implies that $y_{ai} = 1$ for some, but not all, variables in the clique for $i = \{1, 2, 3\}$. Hence, $|y_{ai} - y_{bi}| = 1$ for some pairs $(a, b) \in c$ for $i = \{1, 2, 3\}$. Also, for any other label $i$, $|y_{ai} - y_{bi}| = 0$ for all $(a, b) \in c$ since $y_{ai} = 0$ for all variables $a$ for these labels $i$. For binary variables, the maximum possible value of $|y_{ai} - y_{bi}|$ is 1. Hence,$\phi_c({\bf x}_c) = \omega_c \cdot (1 + 1 + 1) = 3 \cdot \omega_c = \omega_c |\{l_1, l_2, l_3\}$|. 
+For example, let the set of unique labels in a clique be $\Gamma = \{l_1, l_2, l_3\}$. This implies that $y_{ai} = 1$ for some, but not all, variables in the clique for $i = \{1, 2, 3\}$. Hence, $|y_{ai} - y_{bi}| = 1$ for some pairs $(a, b) \in c$ for $i = \{1, 2, 3\}$. Also, for any other label $i$, $|y_{ai} - y_{bi}| = 0$ for all $(a, b) \in c$ since $y_{ai} = 0$ for all variables $a$ for these labels $i$. For binary variables, the maximum possible value of $|y_{ai} - y_{bi}|$ is 1. Hence, $\phi_c({\bf x}_c) = \omega_c \cdot (1 + 1 + 1) = 3 \cdot \omega_c = \omega_c |\{l_1, l_2, l_3\}$|. 
  
-Equation (\ref{eq:hod_ip}) suggests that our diversity model can be interpreted as sum of $P^n$ Ising models over all labels. The $Pn$ Ising model corresponding to label $i$ is $\max_{(a, b) \in c} \cdot |y_{ai} - y_{bi}|$ and it imposes a penalty of 0 if all variables in clique $c$ take the same label $i$, else the penalty is 1.
-
 We now relax the indicator variables $y_{ai}$ to lie in $[0, 1]$. Assuming the pairwise potentials in equation (\ref{eq:energy_hop_min}) to be Potts model, an accurate LP relaxation for the higher-order diversity model is given by:
 
 \begin{align}
@@ -557,7 +555,7 @@ We now relax the indicator variables $y_{ai}$ to lie in $[0, 1]$. Assuming the p
     \text{s.t} \quad &{\bf y} \in \Delta.
 \label{eq:hop-lp}
 \end{align}
-where the label (HOD-LP) stands for LP relaxation for higher-order diversity model. The objective function is similar to that for the Potts model along with the addition of terms corresponding to higher-order potentials. The constraints for (HOD-LP) are the same as for (P-LP). To the best of our knowledge, the above LP relaxation does not have worst-case tightness guarantee, hence the submodular extension we derive using it does not have worst-case optimality property.
+where the label (HOD-LP) stands for LP relaxation for higher-order diversity model. The objective function is similar to that for the Potts model along with the addition of terms corresponding to higher-order potentials. The constraints for (HOD-LP) are the same as for (P-LP). The above LP has not been formally analysed in literature. Hence, we do not make any claims regarding its optimality. However, its similairty in form to (P-LP) is an indication of its accuracy. We establish its accuracy empirically in section \ref{sec:exp}. 
  
 \myparagraph{LP-based Submodular Extension} We use the same $1\text{-of-}L$ encoding
 scheme as for Potts model. Problem \ref{eq:min_upper_bound} then factorises as: 
@@ -568,7 +566,7 @@ scheme as for Potts model. Problem \ref{eq:min_upper_bound} then factorises as:
 \label{eq:hop_upper_bound}
 \end{equation}
 
-Introducing a temperature parameter $T$ to problem (\ref{eq:hop_upper_bound}), 
+We introduce a temperature parameter $T$ to problem (\ref{eq:hop_upper_bound}) to obtain the following new problem:
 
 %Same as eq 5.5
 \begin{equation}
@@ -576,14 +574,14 @@ Introducing a temperature parameter $T$ to problem (\ref{eq:hop_upper_bound}),
 \label{eq:hop_temp}
 \end{equation}
 
-and considering the limit $T \to 0$, problem (\ref{eq:hop_temp}) becomes
+Considering the limit $T \to 0$, problem (\ref{eq:hop_temp}) becomes
 
 %Same as eq 5.6
 \begin{align}
     - \min_{{\bf y} \in \Delta} f({\bf y}) 
 \end{align}
 where $f(.)$ is the Lovasz extension of $F(.)$. We are interested in making
-this LP same as (HOD-LP) of equation (\ref{eq:hop-lp}), thereby enabling us to recover the submodular extension for higher-order diversity model. The following lemma will be of use to us in indentifying the extension.
+this LP same as (HOD-LP) of equation (\ref{eq:hop-lp}), thereby enabling us to obtain the submodular extension for the higher-order diversity model. We will make use of the following lemma in our proof. 
 
 {\lemma The Lovasz extension of the following set function 
   \begin{align}
@@ -593,7 +591,6 @@ this LP same as (HOD-LP) of equation (\ref{eq:hop-lp}), thereby enabling us to r
 is the objective function $E({\bf y})$ of the LP relaxation (HOD-LP).
 \label{lemma:hod_extension}}
 \newline
-We note that the component of the submodular extension corresponding to cliques is of the form of maximum of cut function (that are submodular) over all pairs in a clique. In general, maximum of submodular functions is not submodular. However, in our particular case, the maximum turns out to be submodular as shown in the proof below. Our proof makes use of the following property:
 
 \begin{proof}
  Making use of proposition \ref{proposition:potts_worst-case optimal}, it will be sufficient for us to show that the Lovasz extension of the $i$-th Ising model $F_i(A) = \max_{(a, b) \in c} [|A \cap \{v_{ai}, v_{bi}\}| = 1]$ is $\max_{(a, b) \in c} |y_{ai} - y_{bi}|$.
