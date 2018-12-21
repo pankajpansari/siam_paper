@@ -14,8 +14,8 @@ extension of the Potts model proposed by Zhang et al.\citep{zhang2015higher}, an
 objective function of an accurate linear programming (LP) relaxation of the
 corresponding MAP estimation problem~\citep{kleinberg2002approximation}. Specifically, the Lovasz extension of a submodular extension can be shown to be an objective function for the LP relaxation. This
 connection has four important practical consequences. First, it establishes
-the accuracy of the submodular extension of the Potts model, via the
-UGC-hardness worst-case optimality of the LP relaxation. Second, it provides an
+the optimality of the submodular extension of the Potts model, via the tightest LP relaxation
+under UGC-hardness assumptions. Second, it provides an
 accurate submodular extension of the hierarchical Potts model, via the LP
 relaxation of the corresponding MAP estimation problem proposed
 by Kleinberg and Tardos \citep{kleinberg2002approximation}. Since any metric can be accurately
@@ -31,17 +31,14 @@ algorithm~\citep{ajanthan2017efficient}. As a consequence, we provide the first
 efficient algorithm to compute an upper bound of the log-partition function of
 dense CRFs. This provides complementary information to the popular mean-field
 inference algorithm for dense CRFs, which computes a lower bound on the
-log-partition ~\citep{koltun2011efficient}. Fourthly, we obtain a good 
-submodular extension for higher-order Potts model based on an accurate LP
-relaxation. Higher-order Potts model is a generalisation of the pairwise Potts
-model, and helps to capture interesting properties of the image that cannot be
+log-partition ~\citep{koltun2011efficient}. Fourth, we obtain an accurate 
+submodular extension for a higher-order diversity model based on an LP
+relaxation. Higher-order models can capture interesting properties of the image that cannot be
 done using pairwise models~\citep{vineet2014filter, kohli2007p3}. We show that our upper-bounds on synthetic problems are comparable to those from tree reweighted message passing (TRW)
 ~\citep{wainwright2005new} for the case of sparse CRFs. Unlike our approach,
 TRW is computationally infeasible for dense CRFs, thereby limiting its use in
 practice. Using pairwise dense CRF models, we perform stereo matching on standard
-data sets and obtain better results than \citep{koltun2011efficient}. We also perform semantic segmentation on the MSRC-21 dataset 
-
-The complete code is available at \url{https://github.com/pankajpansari/denseCRF}.
+data sets and obtain better results than \citep{koltun2011efficient}. We also perform semantic segmentation on the MSRC-21 dataset using a combination of dense pairwise and higher-order diversity model. The complete code is available at \url{https://github.com/pankajpansari/denseCRF}.
 
 \mysection{Preliminaries}
 \label{sec:prelim}
