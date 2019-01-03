@@ -792,60 +792,94 @@ compared to mean-field is 0.943. The avearge time ratio is 10.66. We observe tha
 appendix.
 
 
-%\begin{figure*}
-%    \centering
-%\begin{tabular}{cccccc}
-%        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_GT} &
-%        \includegraphics[scale = 0.22]{\imagePath/stereo/higher_potts/tsukuba_hop} &
-%        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/baby1_GT} &
-%        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/baby1_hop} &
-%        \includegraphics[scale = 0.34]{\imagePath/stereo/higher_potts/flowerpots_GT} &
-%        \includegraphics[scale = 0.16]{\imagePath/stereo/higher_potts/flowerpots_hop} \\
-%        \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution
-%        & \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution
-%        & \scriptsize(a) Flowerpots GT & \scriptsize(b) Submod solution\\
-%        {} & {} 
-%        & {} & \scriptsize 2476.82s
-%        & {} & \scriptsize 2471.58s\\
-%
-%\end{tabular}
-%%\vspace{2mm}
-%\mycaption{\footnotesize \em Stereo matching using dense CRFs with higher-order
-%  Potts term in addition to Potts compatibility and Gaussian pairwise potentials.}
-%\label{fig:stereo_hop}
-%\end{figure*}
-%
-%\mysubsection{Stereo Matching using Higher-order Diversity Model}
-%\label{subsec:stereo_hop}
-%\myparagraph{Data} Next, we use the higher-order diversity model for stereo matching on the Middlebury dataset. Higher-order Potts model is suitable to be used for only some images in the dataset, since others have gradually sloping surfaces and higher-order cliques will force all pixels on these surfaces to take similar disparity values.  We take a dense CRF model with Potts compatibility term and Gaussian pairwise potentials, and augment it with higher-order Potts term. We obtain higher-order cliques by using super-pixels obtained from mean-shift algorithm \citep{comaniciu2002mean}.
-%
-%\myparagraph{Method} We again use the modified Gaussian filtering implementation for dense CRFs by
-%\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
-%To compute the contribution of the higher-order Potts, we make use of an
-%efficient strategy to reuse computation. Recall that computing the conditional
-%gradient coordinates $s^*_{\sigma(i)}$ requires us to obtain differences of the
-%nested sets $F(S_i) - F(S_{i - 1})$. We store the clique state at each $i$, and
-%this enables us to compute the difference for each coordinate in a constant
-%amount of time. In this case, computation of conditional gradient takes
-%$\mathcal{O}(cNL)$ where $c$ is the number of higher-order cliques. We ran our
-%algorithm for 200 iterations.
-%
-%\myparagraph{Results} Figure \ref{fig:stereo_hop} shows some example solutions
-%obtained by picking the label with maximum marginal probability for each
-%variable. We observe that our method gives results that are reasonably close to
-%the ground-truth. The set of hyperparameters that we used can be found in the
-%appendix.
+\begin{figure*}
+    \centering
+\begin{tabular}{cc}
+        \includegraphics[scale = 0.30]{\imagePath/stereo/higher_diversity/tsukuba_GT} &
+        \includegraphics[scale = 0.30]{\imagePath/stereo/higher_diversity/tsukuba_hop} \\
+        \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution \\
+        {} & {}  \\
+        \includegraphics[scale = 0.52]{\imagePath/stereo/higher_diversity/baby1_GT} & 
+        \includegraphics[scale = 0.26]{\imagePath/stereo/higher_diversity/baby1_hop} \\ 
+        \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution \\
+        {} & \scriptsize 2476.82s \\
+        \includegraphics[scale = 0.52]{\imagePath/stereo/higher_diversity/flowerpots_GT}&  
+        \includegraphics[scale = 0.26]{\imagePath/stereo/higher_diversity/flowerpots_hop} \\
+        \scriptsize(a) Flowerpots GT & \scriptsize(b) Submod solution\\
+        {} & \scriptsize 2471.58s\\
+
+\end{tabular}
+%\vspace{2mm}
+\mycaption{\footnotesize \em Stereo matching using dense CRFs with higher-order
+  diversity term in addition to Potts compatibility and Gaussian pairwise potentials.}
+\label{fig:stereo_hod}
+\end{figure*}
 
 \mysubsection{Stereo Matching using Higher-order Diversity Model}
-TO-DO
+\label{subsec:stereo_hod}
+\myparagraph{Data} Next, we use the higher-order diversity model for stereo
+matching on the Middlebury dataset. A higher-order model is suitable to be used
+for only some images in the dataset, since others have gradually sloping
+surfaces and higher-order cliques will force all pixels on these surfaces to
+take similar disparity values.  We take a dense CRF model with Potts
+compatibility term and Gaussian pairwise potentials, and augment it with
+higher-order diversity term. We obtain higher-order cliques by using super-pixels obtained from the mean-shift algorithm \citep{comaniciu2002mean}.
 
-\mysubsection{Stereo Matching using Higher-order Diversity Model}
-TO-DO
+\myparagraph{Method} We again use the modified Gaussian filtering implementation for dense CRFs by
+\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
+To compute the contribution of the higher-order model, we make use of an
+efficient strategy to reuse computation. Recall that computing the conditional
+gradient coordinates $s^*_{\sigma(i)}$ requires us to obtain differences of the
+nested sets $F(S_i) - F(S_{i - 1})$. We store the clique state at each $i$, and
+this enables us to compute the difference for each coordinate in a constant
+amount of time. In this case, computation of conditional gradient takes
+$\mathcal{O}(cNL)$ where $c$ is the number of higher-order cliques. We ran our
+algorithm for 200 iterations.
+
+\myparagraph{Results} Figure \ref{fig:stereo_hod} shows some example solutions
+obtained by picking the label with maximum marginal probability for each
+variable. We observe that our method gives results that are reasonably close to
+the ground-truth. The set of hyperparameters that we used can be found in the
+appendix.
+
+\begin{figure*}
+    \centering
+\begin{tabular}{ccc}
+        \includegraphics[scale = 0.24]{\imagePath/stereo/venus_GT} &
+        \includegraphics[scale = 0.24]{\imagePath/stereo/potts/venus_left_mf} &
+        \includegraphics[scale = 0.24]{\imagePath/stereo/potts/venus_left_submod} \\
+        \scriptsize(a) Venus GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution \\ 
+\label{fig:stereo}
+\end{figure*}
+
+
+\mysubsection{Semantic Segmentation using Higher-order Diversity Model}
+\label{subsec:semantic_hod}
+\myparagraph{Data} We evaluate our approach on the task of semantic segmentation on the MSRC-21 dataset \citep{shotton2009textonboost}. It consists of 591 color images of size 320$\times$213 with corresponding ground truth labelings of 21 object classes. We made use of the unary features from the \textit{TextonBoost} classifier \citep{shotton2009textonboost}. As for stereo matching (subsection \ref{subsec:stereo_hod}), we augment the dense CRF with Gaussian pairwise potentials with our higher-order diveristy model. Superpixels for higher-order modeling were obtained from the mean-shift algorithm \citep{comaniciu2002mean}.
+
+\myparagraph{Method} As for stereo matching, we used the modified Gaussian filtering implementation \citep{ajanthan2017efficient} for the contribution of the dense pairwise terms to the conditional gradient. We used the same strategy as in subsection \ref{subsec:stereo_hod} to compute the higher-order component of the conditional gradient in $\mathcal{O}(cNL)$ time-complexity. We ran our
+algorithm for 100 iterations.
+
+\myparagraph{Results} The ground-truth labelings provided with the MSRC-21
+dataset are very coarse. We evaluate our algorithm on the set of 94 images for which fine-grain
+annotations are available \citep{koltun2011efficient}. On this subset, our
+method correctly labeled 81.18\% of pixels. Some representative results are
+shown in figure \ref{}. Our set of hyperparameters for this dataset can be found in the
+appendix.
+
 
 \mysection{Discussion}
 \label{sec:conclude}
-We have established the relation between submodular extension for the Potts
-model and the LP relaxation for MAP estimation using Lovasz extension. This allowed us to identify the worst-case optimal submodular extension for Potts as well as the general metric labeling problems. It is worth noting that it might still be possible to obtain an improved submodular extension for a given problem instance. The design of a computationally feasible algorithm for this task is an interesting direction of future research. While our current work has focused on pairwise graphical models, it can be readily applied to high-order potentials by considering the corresponding LP relaxation objective as the Lovasz extension of a submodular extension. The identification of such extensions for popular high-order potentials such as the $P^n$ Potts model or its robust version could further improve the accuracy of important computer vision applications such as semantic segmentation.
-
+We have established the relation between submodular extension and the LP
+relaxation for MAP estimation using Lovasz extension for various CRF models. This
+allowed us to identify the worst-case optimal submodular extension for Potts as
+well as the general metric labeling problems. In addition, we obtained an
+accurate submodular extension for a higher-order model based on label-diversity
+in cliques. It is worth noting that it might still be possible to obtain an
+improved submodular extension for a given problem instance. The design of
+a computationally feasible algorithm for this task is an interesting direction
+of future research. While our work focused on one class of higher-order model,
+there is potential for our approach to be used to identify accurate submodular
+extensions for other energy families, such as truncated max-of-convex models \citep{pansari2017truncated}. 
 \newpage
 
