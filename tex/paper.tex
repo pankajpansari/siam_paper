@@ -5,7 +5,9 @@ discrete conditional random fields (CRFs) \citep{boykov2001fast,
 kumar2011improved}. Submodularity has also been recently used to design an
 elegant variational inference algorithm to compute the marginals of a discrete
 CRF by minimising an upper-bound on the log-partition function. In the initial
-work of \citep{djolonga2014map}, the energy of the CRF was restricted to be submodular. In a later work ~\citep{zhang2015higher}, the algorithm was extended to handle more general Potts energy functions. The key idea here is to define a large ground set such that its subsets represent valid labelings, sublabelings or even incorrect labelings (these may assign two separate labels to a random variable and hence be invalid). Given the large ground set, it is possible to define a submodular set function whose value is equal to the energy of the CRF for subsets that specify a valid labeling of the model. We refer to such a set function as a {\em submodular extension} of the energy. 
+work of \citep{djolonga2014map}, the energy of the CRF was restricted to be
+submodular. In a later work ~\citep{zhang2015higher}, the algorithm was
+extended to handle more general Potts energy functions. The key idea there was to define a large ground set such that its subsets represent valid labelings, sublabelings or even incorrect labelings (these may assign two separate labels to a random variable and hence be invalid). Given the large ground set, it is possible to define a submodular set function whose value is equal to the energy of the CRF for subsets that specify a valid labeling of the model. We refer to such a set function as a {\em submodular extension} of the energy. 
 
 For a given energy function, there exists a large number of possible submodular extensions. The accuracy of the variational inference algorithm depends crucially on the choice of the submodular extension. Yet, previous work has largely ignored the question of identifying accurate extensions for different energy classes. Indeed, the difficulty of identifying submodular extensions of general energy functions could be a major reason why the experiments of~\citep{zhang2015higher} were restricted to the special case of models specified by the Potts energy functions.
 
@@ -34,7 +36,7 @@ inference algorithm for dense CRFs, which computes a lower bound on the
 log-partition ~\citep{koltun2011efficient}. Fourth, we obtain an accurate 
 submodular extension for a higher-order diversity model based on an LP
 relaxation. Higher-order models can capture interesting properties of the image that cannot be
-done using pairwise models~\citep{vineet2014filter, kohli2007p3}. We show that our upper-bounds on synthetic problems are comparable to those from tree reweighted message passing (TRW)
+expressed using pairwise models~\citep{vineet2014filter, kohli2007p3}. We show that our upper-bounds on synthetic problems are comparable to those from tree reweighted message passing (TRW)
 ~\citep{wainwright2005new} for the case of sparse CRFs. Unlike our approach,
 TRW is computationally infeasible for dense CRFs, thereby limiting its use in
 practice. Using pairwise dense CRF models, we perform stereo matching on standard
@@ -43,7 +45,7 @@ data sets and obtain better results than \citep{koltun2011efficient}. We also pe
 \mysection{Preliminaries}
 \label{sec:prelim}
 
-We now introduce the notation and definitions that we will make use of in the remainder of the paper.
+We now introduce the notation and definitions that we make use of in the remainder of the paper.
 
 \myparagraph{Submodular Functions} Given a ground set $U = \left\{1, \dots, N \right\}$, denote by $2^U$ its power set. A set function $F: 2^U \to \mathbb{R}$ is {\it submodular} if, for all subsets $A, B \subseteq U$, we have
 \begin{equation}
@@ -68,7 +70,7 @@ where $\bf s$ denotes the modular function $s(.)$ represented as a vector.
 \end{align}
 %
 The function $f$ is an extension because it equals $F$ on the vertices of the
-unit cube. That is, for any $A \subseteq V$, $f({\bf 1}_A) = F(A)$ where ${\bf
+unit cube. That is, for any $A \subseteq V$, $f({\bf 1}_A) = F(A)$, where ${\bf
 1}_A$ is the $0\mhyphen{1}$ indicator vector corresponding to the elements of $A$.
 
 {\prop By Edmond's greedy algorithm \citep{edmonds1970submodular}, if ${\bf w} \geq 0$ (non-negative elements), 
@@ -94,7 +96,10 @@ A CRF is defined as a graph on a set of random variables ${\mathcal X} = \{X_1,\
 %
 where $\phi_a$ and $\phi_{ab}$ are the unary and pairwise potentials respectively. In computer vision, we often think of $\mathcal X$ as arranged on a grid. A \emph{sparse CRF} has $\mathcal N$ defined by 4-connected or 8-connected neighbourhood relationships. In a \emph{dense CRF}, on the other hand, every variable is connected to every other variable.
 
-We can augment the above pairwise models with higher-order potentials. Let $\mathcal C$ be the set of cliques, that is, fully-connected groups of variables. These cliques can, for instance, be the set of superpixels from an image segmentation method. Also, let ${\bf x}_c$ be the component of $\bf x$ formed by elements in clique $c$. The energy function now also contains higher-order potentials 
+We can augment the above pairwise models with higher-order potentials. Let
+$\mathcal C$ be the set of cliques on subgroups of variables. These cliques
+can, for instance, be the set of superpixels from a clustering method, such as
+$k$-means or mean-shift \cite{comaniciu2002mean}. Also, let ${\bf x}_c$ be the component of $\bf x$ formed by elements in clique $c$. The energy function now also contains higher-order potentials 
 %
 \begin{equation}
     E({\bf x}) = \sum_{a \in {\mathcal X}} \phi_a(x_a) + \sum_{(a, b) \in {\mathcal N}} \phi_{ab}(x_a, x_b) + \sum_{c \in {\mathcal C}} \phi_c({{\bf x}_c}),
@@ -102,7 +107,7 @@ We can augment the above pairwise models with higher-order potentials. Let $\mat
   \end{equation}
 %
  
-The energy function also defines a probability distribution $P({\bf x})$ as follows:
+The energy function can be interpreted as defining a probability distribution $P({\bf x})$ as follows:
 \begin{equation}
     P({\bf x}) =
     \begin{cases}
@@ -122,7 +127,7 @@ The normalization factor $Z = \sum_{{\bf x} \in {\mathcal L}^N} \exp(-E({\bf x})
 \mysection{Review: Variational Inference Using Submodular Extensions}
 \label{sec:review}
 We now summarise the marginal inference method of Zhang et al. \citep{zhang2015higher} which
-uses submodular extensions.
+made use of a submodular extension.
 
 \begin{figure}
 \centering
@@ -133,7 +138,8 @@ uses submodular extensions.
 
 \myparagraph{Submodular Extensions} A submodular extension is defined using
 a ground set such that some of its subsets correspond to valid CRF labelings.
-To obtain such an extension, we need an encoding scheme which gives the sets corresponding to valid CRF labelings. 
+Note that not every subset needs to represent a valid labeling - some of them could
+correspond to incomplete or invalid labelings. To obtain such an extension, we need an encoding scheme which gives the sets corresponding to valid CRF labelings. 
 
 One example of an encoding scheme is the $1$-of-$L$ encoding, illustrated in figure \ref{fig:encoding}. Let each variable $X_a$ take one of $L$ possible labels. In this scheme, we represent the set of possible assignments for $X_a$ by the set $V_a = \{v_{a1}, v_{a2}, \dots, v_{aL}\}$. If $X_a$ is assigned label $i$, then we select the element $v_{ai}$. Extending to all variables, our ground set becomes $V = \cup_{a = 1}^N V_a$. A valid assignment $A \subseteq V$ assigns each variable exactly one label, that is, $|A \cap V_a| = 1$ for all $V_a$. We denote the set of valid assignments by $\mathcal M$ where $\mathcal{M} = \cap_{a = 1}^{N} \mathcal{M}_a$ and $\mathcal{M}_a = \{A: |A \cap V_a| = 1\}$.
 
@@ -153,7 +159,15 @@ where $\mathcal M$ is the set of valid labelings. The upper-bound is the partiti
 \myparagraph{Conditional Gradient Algorithm} The conditional gradient algorithm
 (algorithm \ref{algo:fw_inference}) \citep{frank1956algorithm} is a good
 candidate for solving problem (\ref{eq:min_upper_bound}) due to two reasons.
-First, problem \eqref{eq:min_upper_bound} is convex. Second, as solving an LP over EP(F) is computationally tractable (property \ref{prop:greedy}), the conditional gradient can be found efficiently. The algorithm starts with an initial solution $\bf s_0$ (line \ref{line:initial}). At each iteration, we compute the conditional gradient $\bf s^*$ (line \ref{line:cond_grad}), which minimises the linear approximation $g({\bf s}_k) + \nabla g({\bf s}_k)^T ({\bf s} - {\bf s}_k)$ of the objective function. Finally, $\bf s$ is updated by either (i) fixed step size schedule, as in line \ref{line:step_size} of algorithm \ref{algo:fw_inference}, or (ii) by doing line search ${\bf s}_{k+1} = \min_{0 \leq \gamma \leq 1} g(\gamma {\bf s}^* + (1 - \gamma) {\bf s}_{k})$.
+First, problem \eqref{eq:min_upper_bound} is convex. Second, as solving an LP
+over EP(F) is computationally tractable (property \ref{prop:greedy}), the
+conditional gradient can be found efficiently. The algorithm starts with an
+initial solution $\bf s_0$ (line \ref{line:initial}). At each iteration, we
+compute the conditional gradient $\bf s^*$ (line \ref{line:cond_grad}), which
+minimises the linear approximation $g({\bf s}_k) + \nabla g({\bf s}_k)^T ({\bf
+s} - {\bf s}_k)$ of the objective function. Finally, $\bf s$ is updated by
+either (i) fixed step size schedule, as in line \ref{line:step_size} of
+algorithm \ref{algo:fw_inference}, or (ii) by doing a line search and setting ${\bf s}_{k+1} = \min_{0 \leq \gamma \leq 1} g(\gamma {\bf s}^* + (1 - \gamma) {\bf s}_{k})$.
 
 \begin{algorithm}
 \mycaption{Upper Bound Minimisation using Conditional Gradient Descent}
@@ -173,22 +187,31 @@ First, problem \eqref{eq:min_upper_bound} is convex. Second, as solving an LP ov
 
 \mysection{Overview: Accurate Submodular Extensions from LP Relaxations}
 
-Different choices of extensions $F$ change the domain in problem \eqref{eq:min_upper_bound}, leading to different upper bounds on the log-partition function. How does one come up with accurate extensions for different classes of CRF energy functions? Is it possible to identify optimal extensions which yields the tightest bound? 
+Different choices of extensions $F$ change the domain in problem \eqref{eq:min_upper_bound}, leading to different upper bounds on the log-partition function. How does one come up with accurate extensions for different classes of CRF energy functions? Is it possible to identify optimal extensions which yield the tightest bound? 
 
-If we introduce a temperature parameter in $P({\bf x})$ (equation \eqref{eq:crf_prob_distrib}) by using $E({\bf x})/T$ and decrease $T$, the resulting distribution starts to peak more sharply around its mode. As $T \to 0$, marginal estimation becomes the same as MAP inference since the resulting distribution $P^0({\bf x})$ has mass 1 at its mode ${\bf x}^*$ and is 0 everywhere else. Given the MAP solution ${\bf x}^*$, one can compute the marginals as $P(X_i = j) = [x_i^* = j]$, where [.] is the Iverson bracket.
-
-  Motivated by this connection, we ask if one can introduce a temperature parameter to our problem \eqref{eq:min_upper_bound} and transform it to an LP relaxation in the limit $T \to 0$? We can then hope to use accurate LP relaxations of MAP problems known in literature to find good submodular extensions for different classes of energy functions. 
+If we introduce a temperature parameter in $P({\bf x})$ (equation
+\eqref{eq:crf_prob_distrib}) by using $E({\bf x})/T$ and decrease $T$, the
+resulting distribution starts to peak more sharply around its mode. This
+is assuming that $P({\bf x})$ is unimodal, and there aren't multiple solutions
+with the same minima. As $T \to 0$, marginal estimation becomes the same as MAP inference since the resulting
+distribution $P^0({\bf x})$ has mass 1 at its mode ${\bf x}^*$ and is
+0 everywhere else. Given the MAP solution ${\bf x}^*$, one can compute the
+marginals as $P(X_i = j) = [x_i^* = j]$, where [.] is the Iverson bracket. Motivated by this connection, we ask if one can introduce a temperature parameter to our problem \eqref{eq:min_upper_bound} and transform it to an LP relaxation in the limit $T \to 0$? We can then hope to use accurate LP relaxations of MAP problems known in literature to find good submodular extensions for different classes of energy functions. 
 
 We answer this question in affirmative. Specifically, in the following two sections we show how one can select the set encoding and submodular extension to convert problem \eqref{eq:min_upper_bound} to accurate LP relaxations for Potts, hierarchical Potts and higher-order diversity models. In fact, when the LP relaxation has tightness guarantees, we obtain worst-case optimal submodular extensions - a notion we elucidate shortly. 
 
-In this paper, we focus on submodular extension families $\mathcal F(.)$ corresponding to different classes of energy functions $\mathcal E$. Given an instance of the energy function $E(.)$ from the class $\mathcal E$,  there is a corresponding submodular extension ${\mathcal F}(E)$. Also, we seek a closed-form analytical expression for $\mathcal F$. 
+In this work, we focus on submodular extension families $\mathcal F(.)$
+corresponding to different classes of energy functions $\mathcal E$. Given an
+instance of the energy function $E(.)$ from the class $\mathcal E$,  there is
+a corresponding submodular extension ${\mathcal F}(E)$. Moreover, we seek a closed-form analytical expression for $\mathcal F$. 
 
 \mysection{Worst-case Optimal Submodular Extensions}
 
 \myparagraph{Worst-case Optimality}
 
-Our extensions are derived from LP relaxations. When the LP relaxation is the tightest known, the extension family ${\mathcal
-F}_{opt}$ we obtain is \emph{worst-case optimal}. This implies that there does not
+Our extensions are derived from LP relaxations. When the LP relaxation is the
+tightest possible, the extension family ${\mathcal
+F}_{opt}$ we obtain is \emph{worst-case optimal}. This is to say that there does not
 exist another submodular extension family ${\mathcal F}$ that gives a tighter
 upper bound for problem \eqref{eq:min_upper_bound} than ${\mathcal F}_{opt}$
 for all instances of the energy function in $\mathcal E$. Formally, 
@@ -198,7 +221,10 @@ for all instances of the energy function in $\mathcal E$. Formally,
     \forall \; E(.) \in \mathcal E.
     \label{eq:best_submod}
 \end{equation}
-Note that the notion of worst-case optimality does not guarantee that the extension is best for every instance of the energy function. It may be possible to solve an optimisation problem to obtain the best extension for every given instace of energy $E(.)$. However, in this paper, we do not take that approach, and instead provide a general solution for a given class of energy function. 
+Note that the notion of worst-case optimality does not guarantee that the
+extension is best for every instance of the energy function. It may be possible
+to solve an optimisation problem to obtain the best extension for every given
+instance of energy $E(.)$. However, in this paper, we do not take that approach, and instead provide a general solution for a given class of energy function. 
 
 In subsection \ref{subsec:potts}, we prove the worst-case optimality of the submodular extension used in literature for the Potts model. In subsection \ref{subsec:hier_potts}, we obtain worst-case optimal submodular extension for the more general hierarchical Potts model. Finally, in subsection \ref{subsec:dense_crf}, we provide an approach to make our inference algorithm efficient for the dense CRF model. Using our approach, the inference algorithm has linear time-complexity in the number of variables and labels.
 
@@ -210,7 +236,12 @@ The pairwise Potts model, also known as the uniform metric, specifies the pairwi
 \end{equation}
 where $w_{ab}$ is the weight associated with edge $(a, b)$. There are no higher-order potential terms in this model as in equation (\ref{eq:energy_min}).
 %
-\myparagraph{Tightest LP Relaxation} Before describing our set encoding and submodular extension, we briefly outline the LP relaxation of the corresponding MAP estimation problem. To this end, we define indicator variables $y_{ai}$ which equal 1 if $X_a = i$, and 0 otherwise. The following LP relaxation is the tightest known for Potts model in the worst-case, assuming the Unique Games Conjecture to be true \citep{manokaran2008sdp}:
+\myparagraph{Tightest LP Relaxation} Before describing our set encoding and
+submodular extension, we briefly outline the LP relaxation of the corresponding
+MAP estimation problem. To this end, we define indicator variables $y_{ai}$
+which equal 1 if $X_a = i$, and 0 otherwise. The following LP relaxation is the
+tightest possible for Potts model in the worst-case, assuming the Unique Games
+Conjecture is true \citep{manokaran2008sdp}:
 \begin{align}
     \text{(P-LP)} \quad \min_{\bf y} \enskip & E({\bf y}) =  \sum_{a} \sum_{i} \phi_a(i)y_{ai} + \nonumber\\
      &\sum_{(a, b) \in {\mathcal N}} \sum_{i} \frac{w_{ab}}{2} \cdot |y_{ai} - y_{bi}| \nonumber\\
@@ -232,7 +263,7 @@ of $\bf y$ corresponding to $X_a$.
 \min_{{\bf s} \in EP(F)} \quad \sum_{a = 1}^{N} \log \sum_{i = 1}^L \exp(-s_{ai}).
 \label{eq:potts_upper_bound}
 \end{equation}
-(See Remark 1 in appendix)
+(See Remark 1 in appendix A for proof)
 \myparagraph{Marginal Estimation with Temperature} We now introduce
 a temperature parameter $T > 0$ to problem \eqref{eq:potts_upper_bound} which
 divides $E({\bf x})$, or equivalently divides $\bf s$ belonging to $EP(F)$. Also, since $T > 0$, we can multiply the objective by $T$ leaving the problem unchanged. Without changing the solution, we can transform problem \eqref{eq:potts_upper_bound} as follows
@@ -330,7 +361,16 @@ Recall that $\max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle$ is the v
 \end{equation}
 \end{proof}
 
-The above problem is equivalent to an LP relaxation of the corresponding MAP estimtation problem (see Remark 2 in appendix). We note that $g_T ({\bf s})$ in problem \eqref{eq:potts_temp} becomes the objective function of an LP relaxation in the limit $T \to 0$. We seek to obtain the worst-case optimal submodular extension by making $g_T ({\bf s})$ same as the objective of (P-LP) as $T \to 0$. Since at $T = 1$, problems \eqref{eq:potts_temp} and \eqref{eq:potts_upper_bound} are equivalent, this gives us the worst-case optimal extension for our problem \eqref{eq:potts_upper_bound}. 
+The above problem is equivalent to an LP relaxation of the corresponding MAP
+estimation problem (see Remark 2 in appendix). We note that $g_T ({\bf s})$ in
+problem \eqref{eq:potts_temp} becomes the objective function of an LP
+relaxation in the limit $T \to 0$. We seek to obtain the worst-case optimal
+submodular extension by making $g_T ({\bf s})$ same as the objective of (P-LP)
+as $T \to 0$. We note that problems \eqref{eq:potts_temp} and
+\eqref{eq:potts_upper_bound} become equivalent at $T = 1$, and our worst-case optimality
+guarantee was derived in the limit $T \to 0$. However, it is possible to
+derive such a guarantee only in the limit case, and it is in this sense that we
+claim the worst-case optimality.
 
 The question now becomes how to recover the worst-case optimal submodular extension using $E({\bf y})$. The following proposition answers this question.
 {\proposition The worst-case optimal  submodular extension for Potts model is given by $F_{Potts}(A) = \sum_{i = 1}^L F_i(A)$, where
@@ -365,7 +405,9 @@ Proposition \ref{proposition:potts_worst-case optimal} paves the way for us to i
 \mysubsection{Hierarchical Potts Model}
 \label{subsec:hier_potts}
 
-Potts model imposes the same penalty for unequal assignment of labels to neighbouring variables, regardless of the label dissimilarity. A more natural approach is to vary the penalty based on how different the labels are. A hierarchical Potts model permits this by specifying the distance between labels using a tree with the following properties:
+Potts model imposes the same penalty for unequal assignment of labels to
+neighbouring variables, regardless of the label dissimilarity. In some
+scenarios, a more natural approach is to vary the penalty based on how different the labels are. A hierarchical Potts model permits this by specifying the distance between labels using a tree with the following properties:
 \vspace{2mm}
 \begin{enumerate}
   \itemsep+1em 
@@ -385,7 +427,11 @@ Potts model imposes the same penalty for unequal assignment of labels to neighbo
 
 A subtree $T$ of an hierarchical Potts model is a tree comprising all the descendants of some node $v$ (not root). Given a subtree $T$, $l_T$ denotes the length of the tree-edge leading upward from the root of $T$ and $L(T)$ denotes the set of leaves of $T$. We call the leaves of the tree as labels and all other nodes of the tree expect the root as \emph{meta-labels}. Figure \ref{fig:rhst} illustrates the notations in the context of a hierarchical Potts model.
 %
-\myparagraph{Tightest LP Relaxation} We use the same indicator variables $y_{ai}$ that were employed in the LP relaxation of Potts model. Let $y_a(T) = \sum_{i \in L(T)} y_{ai}$. The following LP relaxation is the tightest known for hierarchical Potts model in the worst-case, assuming the Unique Games Conjecture to be true \citep{manokaran2008sdp}
+\myparagraph{Tightest LP Relaxation} We use the same indicator variables
+$y_{ai}$ that were employed in the LP relaxation of Potts model. Let $y_a(T)
+= \sum_{i \in L(T)} y_{ai}$. The following LP relaxation is the tightest known
+for hierarchical Potts model in the worst-case, assuming the Unique Games
+Conjecture is true \citep{manokaran2008sdp}
 \begin{align}
 \text{(T-LP)} \quad \min_{\bf y} \enskip & \widetilde{E}({\bf y}) =  \sum_{a} \sum_{i} \phi_a(i)y_{ai} + \nonumber\\
                                          &\sum_{(a, b) \in {\mathcal N}} w_{ab} \sum_T l_T \cdot |y_{a}(T) - y_{b}(T)| \nonumber\\
@@ -455,7 +501,7 @@ Using our encoding scheme, we rewrite problem (\ref{eq:min_upper_bound}) as:
 (Proof in appendix).
 
 The above problem is equivalent to an LP relaxation of the corresponding MAP
-estimtation problem (see Remark 3 in appendix). Hence, $g_T ({\bf s})$ becomes the objective function of an LP relaxation in the limit $T \to 0$. We seek to make this objective same as $\widetilde{E}({\bf z})$ of (T-LP-FULL) in the limit $T \to 0$. The question now becomes how to recover the  worst-case optimal submodular extension from $\widetilde{E}({\bf z})$.
+estimation problem (see Remark 3 in appendix). Hence, $g_T ({\bf s})$ becomes the objective function of an LP relaxation in the limit $T \to 0$. We seek to make this objective same as $\widetilde{E}({\bf z})$ of (T-LP-FULL) in the limit $T \to 0$. The question now becomes how to recover the  worst-case optimal submodular extension from $\widetilde{E}({\bf z})$.
 %
 {\proposition The  worst-case optimal submodular extension for hierarchical Potts model is given by $F_{hier}(A) = \sum_{i = 1}^M F_i(A)$, where
 \begin{align}
@@ -492,7 +538,7 @@ features that describe the random variable $X_a$. In practice, similar to
 \citep{koltun2011efficient}, we use $x, y$ coordinates and RGB values
 associated to a pixel as its features.
 
-Algorithm \ref{algo:fw_inference} assumes that the conditional gradient $\bf s^*$ in step {\ref{line:cond_grad}} can be computed efficiently. This is certainly not the case for dense CRFs, since computing $s^*$ involves $NL$ function evaluations of the submodular extension $F$, where $N$ is the number of variables, and $L$ is the number of labels. Each $F$ evaluation has complexity ${\mathcal O}(N)$ using the efficient Gaussian filtering algorithm of \citep{koltun2011efficient}. However, computation of $s^*$ would still be ${\mathcal O} (N^2)$ this way, which is clearly impractical for computer-vision applications where $N \sim 10^5 - 10^6$.
+Algorithm \ref{algo:fw_inference} assumes that the conditional gradient $\bf s^*$ in step {\ref{line:cond_grad}} can be computed efficiently. This is certainly not the case for dense CRFs, since computing $s^*$ involves $NL$ function evaluations of the submodular extension $F$, where $N$ is the number of variables, and $L$ is the number of labels. Each $F$ evaluation has complexity ${\mathcal O}(N)$ using the efficient Gaussian filtering algorithm of \citep{koltun2011efficient}. However, computation of $s^*$ would still be ${\mathcal O} (N^2)$, which is clearly impractical for computer-vision applications where $N \sim 10^5 - 10^6$.
 
 However, using the equivalence of relaxed LP objectives and the Lovasz
 extension of submodular extensions in proposition
@@ -526,7 +572,10 @@ to capture useful image statistics because it restricts the order of the
 potentials to be at most two. Higher order clique potentials can model complex
 interactions of random variables, and thereby overcome this difficulty.
 
-A higher-order model useful in real-world applications is the \textit{diversity} model, which favours labeling where variables in a clique have fewer number of unique labels. For instance, in semantic segmentataion we often first obtain superpixels from an image segmentation method, which we consider as cliques in our model. We expect the labeling in a superpixel to be homogeneous. As a result, it is preferable to have pixels belonging to a superpixel to be incorrectly labeled with two class labels rather than three or more class labels. Let $\Gamma({\bf x}_c)$ be the set of unique labels assigned to variables in the clique $c$, and $\omega_c$ be the weight associated with the clique. In our case, we take the clique potentials as proportional to the number of unique labels in the clique $c$:
+A higher-order model useful in real-world applications is the
+\textit{diversity} model, which favours labeling where variables in a clique
+have fewer number of unique labels. For instance, in semantic segmentation we
+often first obtain superpixels from a clustering method \cite{comaniciu2002mean}, which we consider as cliques in our model. We expect the labeling in a superpixel to be homogeneous. As a result, it is preferable to have pixels belonging to a superpixel to be incorrectly labeled with two class labels rather than three or more class labels. Let $\Gamma({\bf x}_c)$ be the set of unique labels assigned to variables in the clique $c$, and $\omega_c$ be the weight associated with the clique. In our case, we take the clique potentials as proportional to the number of unique labels in the clique $c$:
  
 \begin{equation}
   \phi_c({\bf x}_c) = \omega_c|\Gamma({\bf x}_c)|
@@ -545,7 +594,7 @@ First, let us consider the IP formulation of the MAP problem for our diversity m
 
 For example, let the set of unique labels in a clique be $\Gamma = \{l_1, l_2, l_3\}$. This implies that $y_{ai} = 1$ for some, but not all, variables in the clique for $i = \{1, 2, 3\}$. Hence, $|y_{ai} - y_{bi}| = 1$ for some pairs $(a, b) \in c$ for $i = \{1, 2, 3\}$. Also, for any other label $i$, $|y_{ai} - y_{bi}| = 0$ for all $(a, b) \in c$ since $y_{ai} = 0$ for all variables $a$ for these labels $i$. For binary variables, the maximum possible value of $|y_{ai} - y_{bi}|$ is 1. Hence, $\phi_c({\bf x}_c) = \omega_c \cdot (1 + 1 + 1) = 3 \cdot \omega_c = \omega_c |\{l_1, l_2, l_3\}$|. 
  
-We now relax the indicator variables $y_{ai}$ to lie in $[0, 1]$. Assuming the pairwise potentials in equation (\ref{eq:energy_hop_min}) to be Potts model, an accurate LP relaxation for the higher-order diversity model is given by:
+We now relax the indicator variables $y_{ai}$ to lie in $[0, 1]$. Assuming the pairwise potentials in equation (\ref{eq:energy_hop_min}) to be Potts, an accurate LP relaxation for the higher-order diversity model is given by:
 
 \begin{align}
     \text{(HOD-LP)} \quad \min_{\bf y} \enskip & E({\bf y}) =  \sum_{a = 1}^N
@@ -555,34 +604,33 @@ We now relax the indicator variables $y_{ai}$ to lie in $[0, 1]$. Assuming the p
     \text{s.t} \quad &{\bf y} \in \Delta.
 \label{eq:hop-lp}
 \end{align}
-where the label (HOD-LP) stands for LP relaxation for higher-order diversity model. The objective function is similar to that for the Potts model along with the addition of terms corresponding to higher-order potentials. The constraints for (HOD-LP) are the same as for (P-LP). The above LP has not been formally analysed in literature. Hence, we do not make any claims regarding its optimality. However, its similairty in form to (P-LP) is an indication of its accuracy. We establish its accuracy empirically in section \ref{sec:exp}. 
+where the label (HOD-LP) stands for LP relaxation for higher-order diversity
+model. The objective function is similar to that for the Potts model along with
+the addition of terms corresponding to higher-order potentials. The constraints
+for (HOD-LP) are the same as for (P-LP). The above LP has not been formally
+analysed in literature, and we do not make any claims regarding its
+optimality. However, its similarity in form to (P-LP) is an indication of its accuracy. We establish its accuracy empirically in section \ref{sec:exp}. 
  
 \myparagraph{LP-based Submodular Extension} We use the same $1\text{-of-}L$ encoding
 scheme as for Potts model. Problem \ref{eq:min_upper_bound} then factorises as: 
-
 %Same as eq 5.4
 \begin{equation}
 \min_{{\bf s} \in EP(F)} \quad \sum_{a = 1}^{N} \log \sum_{i = 1}^L \exp(-s_{ai}).
 \label{eq:hop_upper_bound}
 \end{equation}
-
 We introduce a temperature parameter $T$ to problem (\ref{eq:hop_upper_bound}) to obtain the following new problem:
-
 %Same as eq 5.5
 \begin{equation}
     \min_{{\bf s} \in EP(F)} \quad g_T ({\bf s}) = \sum_{a = 1}^{N} T \cdot \log \sum_{i = 1}^L \exp(-\frac{s_{ai}}{T}).
 \label{eq:hop_temp}
 \end{equation}
-
-Considering the limit $T \to 0$, problem (\ref{eq:hop_temp}) becomes
-
+In the limit $T \to 0$, problem (\ref{eq:hop_temp}) becomes
 %Same as eq 5.6
 \begin{align}
     - \min_{{\bf y} \in \Delta} f({\bf y}) 
 \end{align}
 where $f(.)$ is the Lovasz extension of $F(.)$. We are interested in making
-this LP same as (HOD-LP) of equation (\ref{eq:hop-lp}), thereby enabling us to obtain the submodular extension for the higher-order diversity model. We will make use of the following lemma in our proof. 
-
+this LP the same as (HOD-LP) of equation (\ref{eq:hop-lp}), thereby enabling us to obtain the submodular extension for the higher-order diversity model. We will make use of the following lemma in our proof. 
 {\lemma The Lovasz extension of the following set function 
   \begin{align}
       F_{HOD}(A) &= F_{Potts}(A) + \nonumber \sum_{c \in {\mathcal C}} w_c \cdot \sum_{i = 1}^L \max_{(a, b) \in c} [|A \cap \{v_{ai}, v_{bi}\}| = 1]
@@ -616,7 +664,8 @@ We are now in a position to state our main result:
 \begin{proof}
 We first observe that $\forall {\bf y} \in {\mathcal L}^N$, that is, for all valid labelings, $F_{HOD}(A_{\bf y})$ equals $E({\bf y})$.  Hence, $F_{HOD}$ is an extension. 
 
-Also, we showed in lemma \ref{lemma:hod_extension} that the Lovasz extension of $F_{HOD}$ is $E({\bf y})$ in probem (HOD-LP). $E({\bf y})$ being a sum of terms corresponding to maximum of linear functions, is convex. The convexity of Lovasz extension implies submodularity of the set function \citep{bach2013learning}. Hence, $F_{HOD}$ is submodular. 
+Also, we showed in lemma \ref{lemma:hod_extension} that the Lovasz extension of
+$F_{HOD}$ is $E({\bf y})$ in problem (HOD-LP). $E({\bf y})$ being a sum of terms corresponding to maximum of linear functions, is convex. The convexity of Lovasz extension implies submodularity of the set function \citep{bach2013learning}. Hence, $F_{HOD}$ is submodular. 
 \end{proof}
  
 We now show the effectiveness of the accurate submodular extensions for different classes of models by means of experiments on synthetic and real-world datasets.
@@ -719,7 +768,9 @@ are varied in the range $\{1, 2, 5, 10\}$. We compare the results of
 our worst-case optimal submodular extension with an alternate submodular
 extension as given in figure \ref{fig:alternate_extension}.
 
-\myparagraph{Method} For our algorithm, we use the standard schedule $\gamma = 2/(k + 2)$ to obtain step size $\gamma$ at iteration $k$. We run our algorithm till convergence - 100 iterations suffice for this. The experiments are repeated for 100 randomly generated unaries for each model and each weight. For TRW, we used the MATLAB toolbox of \citep{domke2013learning}. The baseline code does not optimise over tree distributions. We varied the edge-appearance probability in trees over the range [0.1 - 0.5] and found 0.5 to give tightest upper bound.
+\myparagraph{Method} For our algorithm, we use the standard schedule $\gamma
+= 2/(k + 2)$ to obtain step size $\gamma$ at iteration $k$. We run our
+algorithm till convergence - 100 iterations suffices for this. The experiments are repeated for 100 randomly generated unaries for each model and each weight. For TRW, we used the MATLAB toolbox of \citep{domke2013learning}. The baseline code does not optimise over tree distributions. We varied the edge-appearance probability in trees over the range [0.1 - 0.5] and found 0.5 to give tightest upper bound.
 
 \myparagraph{Results} We plot the ratio of the normalised difference of the upper
 bound values of our method with TRW as a function of pairwise weights. The
@@ -788,7 +839,7 @@ for our algorithm. We also report the time and energy values of the solution
 for both methods. Though we are not performing MAP estimation, energy values
 give us a quantitative indication of the quality of solutions. For the full set of
 21 image pairs (2006 dataset), the average ratio of the energies of the solutions from our method 
-compared to mean-field is 0.943. The avearge time ratio is 10.66. We observe that our algorithm results in more natural looking stereo matching results with lower energy values for all images. However, mean-field runs faster than our method for each instance.The set of hyperparameters that we used can be found in the
+compared to mean-field is 0.943. The average time ratio is 10.66. We observe that our algorithm results in more natural looking stereo matching results with lower energy values for all images. However, mean-field runs faster than our method for each instance.The set of hyperparameters that we used can be found in the
 appendix.
 
 
@@ -848,14 +899,21 @@ appendix.
         \includegraphics[scale = 0.24]{\imagePath/stereo/venus_GT} &
         \includegraphics[scale = 0.24]{\imagePath/stereo/potts/venus_left_mf} &
         \includegraphics[scale = 0.24]{\imagePath/stereo/potts/venus_left_submod} \\
-        \scriptsize(a) Venus GT & \scriptsize(b) MF solution & \scriptsize(c) Submod solution \\ 
-\label{fig:stereo}
+\end{tabular}
+\mycaption{\footnotesize \em To fill}
+%\label{fig:stereo}
 \end{figure*}
 
 
 \mysubsection{Semantic Segmentation using Higher-order Diversity Model}
 \label{subsec:semantic_hod}
-\myparagraph{Data} We evaluate our approach on the task of semantic segmentation on the MSRC-21 dataset \citep{shotton2009textonboost}. It consists of 591 color images of size 320$\times$213 with corresponding ground truth labelings of 21 object classes. We made use of the unary features from the \textit{TextonBoost} classifier \citep{shotton2009textonboost}. As for stereo matching (subsection \ref{subsec:stereo_hod}), we augment the dense CRF with Gaussian pairwise potentials with our higher-order diveristy model. Superpixels for higher-order modeling were obtained from the mean-shift algorithm \citep{comaniciu2002mean}.
+\myparagraph{Data} We evaluate our approach on the task of semantic
+segmentation on the MSRC-21 dataset \citep{shotton2009textonboost}. It consists
+of 591 color images of size 320$\times$213 with corresponding ground truth
+labelings of 21 object classes. We made use of the unary features from the
+\textit{TextonBoost} classifier \citep{shotton2009textonboost}. As for stereo
+matching (subsection \ref{subsec:stereo_hod}), we augment the dense CRF with
+Gaussian pairwise potentials with our higher-order diversity model. Superpixels for higher-order modeling were obtained from the mean-shift algorithm \citep{comaniciu2002mean}.
 
 \myparagraph{Method} As for stereo matching, we used the modified Gaussian filtering implementation \citep{ajanthan2017efficient} for the contribution of the dense pairwise terms to the conditional gradient. We used the same strategy as in subsection \ref{subsec:stereo_hod} to compute the higher-order component of the conditional gradient in $\mathcal{O}(cNL)$ time-complexity. We ran our
 algorithm for 100 iterations.
