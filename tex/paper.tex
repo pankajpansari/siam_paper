@@ -107,7 +107,7 @@ $k$-means or mean-shift \cite{comaniciu2002mean}. Also, let ${\bf x}_c$ be the c
   \end{equation}
 %
  
-The energy function can be interpreted as defining a probability distribution $P({\bf x})$ as follows:
+The energy function can be interpreted as defining a probability distribution $P({\bf x})$ as:
 \begin{equation}
     P({\bf x}) =
     \begin{cases}
@@ -187,7 +187,7 @@ algorithm \ref{algo:fw_inference}, or (ii) by doing a line search and setting ${
 
 \mysection{Overview: Accurate Submodular Extensions from LP Relaxations}
 
-Different choices of extensions $F$ change the domain in problem \eqref{eq:min_upper_bound}, leading to different upper bounds on the log-partition function. How does one come up with accurate extensions for different classes of CRF energy functions? Is it possible to identify optimal extensions which yield the tightest bound? 
+Different choices of extensions $F$ change the domain in problem \eqref{eq:min_upper_bound}, leading to different upper bounds on the log-partition function. How does one come up with accurate extensions for different classes of CRF energy? Is it possible to identify optimal extensions which yield the tightest bound? 
 
 If we introduce a temperature parameter in $P({\bf x})$ (equation
 \eqref{eq:crf_prob_distrib}) by using $E({\bf x})/T$ and decrease $T$, the
@@ -214,7 +214,7 @@ tightest possible, the extension family ${\mathcal
 F}_{opt}$ we obtain is \emph{worst-case optimal}. This is to say that there does not
 exist another submodular extension family ${\mathcal F}$ that gives a tighter
 upper bound for problem \eqref{eq:min_upper_bound} than ${\mathcal F}_{opt}$
-for all instances of the energy function in $\mathcal E$. Formally, 
+for all instances of the energy function in $\mathcal E$. Formally, ${\mathcal F}_{opt}$ is worst-case optimal if
 \begin{equation}
     \nexists {\mathcal F}: \min_{{\bf s} \in EP({\mathcal F}(E))} g({\bf s})
     \leq \min_{{\bf s} \in EP({\mathcal F}_{opt}(E))} g({\bf s}) \enspace
@@ -226,7 +226,7 @@ extension is best for every instance of the energy function. It may be possible
 to solve an optimisation problem to obtain the best extension for every given
 instance of energy $E(.)$. However, in this paper, we do not take that approach, and instead provide a general solution for a given class of energy function. 
 
-In subsection \ref{subsec:potts}, we prove the worst-case optimality of the submodular extension used in literature for the Potts model. In subsection \ref{subsec:hier_potts}, we obtain worst-case optimal submodular extension for the more general hierarchical Potts model. Finally, in subsection \ref{subsec:dense_crf}, we provide an approach to make our inference algorithm efficient for the dense CRF model. Using our approach, the inference algorithm has linear time-complexity in the number of variables and labels.
+In subsection \ref{subsec:potts}, we prove the worst-case optimality of the submodular extension used in literature for the Potts model. In subsection \ref{subsec:hier_potts}, we obtain worst-case optimal submodular extension for the more general hierarchical Potts model. Finally, in subsection \ref{subsec:dense_crf}, we provide a way to make our inference algorithm efficient for the dense CRF model. Using our approach, the inference algorithm has linear time-complexity in the number of variables and labels.
 
 \mysubsection{Pairwise Potts Model}
 \label{subsec:potts}
@@ -277,8 +277,7 @@ divides $E({\bf x})$, or equivalently divides $\bf s$ belonging to $EP(F)$. Also
 \includegraphics[scale = 0.35]{./figures/potts_chain_extension.png}
 \mycaption{\footnotesize \em An illustration of the worst-case optimal
 submodular extension for Potts model for a chain graph of 4 variables, each of
-which can take 3 labels. The figure shows the way to compute the extension
-values of the set $A = \{v_{1, 1}, v_{4, 1}, v_{3, 2}$\}.}
+which can take 3 labels. The figure shows how to compute extension for $A = \{v_{1, 1}, v_{4, 1}, v_{3, 2}$\}.}
 \label{fig:potts_extension_example}
 \end{figure}
 
