@@ -131,7 +131,7 @@ made use of a submodular extension.
 
 \begin{figure}
 \centering
-\includegraphics[scale = 0.30]{./figures/1_of_L.png}
+\includegraphics[scale = 0.35]{./figures/1_of_L.png}
 \mycaption{\footnotesize \em Illustration of $1$-of-$L$ encoding used in \citep{zhang2015higher} with 4 variables and 3 labels. The blue labeling, corresponding to $X_1 = 1, X_2 = 3, X_3 = 2, X_4 = 1$, is valid. The yellow labeling, corresponding to $X_2 = 2, X_3 = 1, 3, X_4 = 3$, is invalid since $X_3$ has been assigned multiple labels and $X_1$ has been assigned none.} 
 \label{fig:encoding}
 \end{figure}
@@ -274,7 +274,7 @@ divides $E({\bf x})$, or equivalently divides $\bf s$ belonging to $EP(F)$. Also
 
 \begin{figure}
 \centering
-\includegraphics[scale = 0.30]{./figures/potts_chain_extension.png}
+\includegraphics[scale = 0.35]{./figures/potts_chain_extension.png}
 \mycaption{\footnotesize \em An illustration of the worst-case optimal
 submodular extension for Potts model for a chain graph of 4 variables, each of
 which can take 3 labels. The figure shows the way to compute the extension
@@ -420,7 +420,7 @@ scenarios, a more natural approach is to vary the penalty based on how different
 %
 \begin{figure}
 \centering
-\includegraphics[scale = 0.30]{./figures/rhst_notation.png}
+\includegraphics[scale = 0.35]{./figures/rhst_notation.png}
 \mycaption{\footnotesize \em A hierarchical Potts model instance illustrating notations with 2 meta-labels (blue) and 4 labels (yellow). All labels are at the same level. $r = 2$, that is, edge-length decreases by 2 at each level. Also, distance between labels 1 and 3 is $d(1, 3) = 0.5 + 1 + 1 + 0.5 = 3$.} 
 \label{fig:rhst}
 \end{figure}
@@ -690,11 +690,11 @@ section, we refer to our algorithm as \emph{Submod} and mean field as \emph{MF}.
 \begin{figure}
 \centering
 \begin{tabular}{cc}
-\includegraphics[scale = 0.25]{./figures/synthetic_tree.png} &
-\includegraphics[scale = 0.25]{./figures/synthetic_tree_2_new.png} \\
+\includegraphics[scale = 0.30]{./figures/synthetic_tree.png} &
+\includegraphics[scale = 0.30]{./figures/synthetic_tree_2_new.png} \\
   \scriptsize(a) Tree A & \scriptsize(b) Tree B \\
 \end{tabular}
-\mycaption{\footnotesize \em The hierarchical Potts models defining pairwise
+\mycaption{\footnotesize \em {\bf Trees for synthetic experiments:} The hierarchical Potts models defining pairwise
 distance among 20 labels used for upper-bound comparison with TRW. Blue nodes
 are the meta-labels and yellow nodes are labels. All the edges at a particular
 level have the same edge weights. The sequence of weights from root level to
@@ -705,7 +705,7 @@ shown to clump together 4 and 5 leaf nodes for tree A and B respectively.}
 
 \begin{figure}
 \centering
-\resizebox{180pt}{150pt}{
+\resizebox{190pt}{160pt}{
 \begin{tikzpicture}[-latex ,auto ,node distance =2 cm and 2cm ,on grid
   , semithick , state/.style ={ circle , color = black , draw,black , text=blue , minimum width =1 cm}, cross/.style={color=red, very thick, dashed}, unary/.style={color=blue, very thick}] 
 
@@ -735,7 +735,7 @@ shown to clump together 4 and 5 leaf nodes for tree A and B respectively.}
 \path[cross] (n23) edge [bend left =25] node[below] {} (n13);
 \end{tikzpicture}
 }
-\mycaption{\footnotesize \em An st-graph specifying the alternate submodular
+\mycaption{\footnotesize \em {\bf Alternate extension for synthetic experiments}: An st-graph specifying the alternate submodular
 extension for Potts model for 2 variables with 3 labels each and connected to
 each other. The convention used is same as in figure \ref{fig:optimal_extension_graph}. Each dotted red arc has weight $w_{12}/2$.  This alternate extension was also used to derive the extension for hierarchical Potts model.}
 \label{fig:alternate_extension}
@@ -743,8 +743,8 @@ each other. The convention used is same as in figure \ref{fig:optimal_extension_
 
 \begin{figure}
 \centering
-\includegraphics[scale = 0.50]{./figures/synthetic_upper_bound_comparison.pdf}
-\mycaption{\footnotesize \em Upper-bound comparison using synthetic data. The
+\includegraphics[scale = 0.80]{./figures/synthetic_upper_bound_comparison.pdf}
+\mycaption{\footnotesize \em {\bf Upper-bound comparison using synthetic data:} The
 plot shows the ratio (Submod bound - TRW bound)/|TRW bound| averaged over 100
 unary instances as a function of pairwise weights using the worst-case optimal and
 alternate extension for Potts and hierarchical Potts models. We observe that
@@ -819,7 +819,7 @@ the mean-field algorithm of Koltun and Krahenbuhl \citep{koltun2011efficient}. W
 \label{fig:stereo}
 \end{figure*}
 
-
+\clearpage
 \mysubsection{Stereo Matching using Dense CRFs}
 \label{subsec:stereo}
 \myparagraph{Data} We demonstrate the benefit our algorithm for stereo matching on images extracted from the Middlebury stereo matching dataset \citep{scharstein2001taxonomy}. We use dense CRF models with Potts compatibility term and Gaussian pairwise potentials. The unary terms are obtained using the absolute difference matching function of \citep{scharstein2001taxonomy}. 
@@ -849,7 +849,7 @@ appendix.
         \includegraphics[scale = 0.30]{\imagePath/stereo/higher_diversity/tsukuba_GT} &
         \includegraphics[scale = 0.30]{\imagePath/stereo/higher_diversity/tsukuba_hop} \\
         \scriptsize(a) Tsukuba GT & \scriptsize(b) Submod solution \\
-        {} & {}  \\
+        {} & \scriptsize 1582.04s  \\
         \includegraphics[scale = 0.52]{\imagePath/stereo/higher_diversity/baby1_GT} & 
         \includegraphics[scale = 0.26]{\imagePath/stereo/higher_diversity/baby1_hop} \\ 
         \scriptsize(a) Baby1 GT & \scriptsize(b) Submod solution \\
