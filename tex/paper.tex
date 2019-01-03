@@ -895,13 +895,27 @@ appendix.
 
 \begin{figure*}
     \centering
-\begin{tabular}{ccc}
-        \includegraphics[scale = 0.24]{\imagePath/stereo/venus_GT} &
-        \includegraphics[scale = 0.24]{\imagePath/stereo/potts/venus_left_mf} &
-        \includegraphics[scale = 0.24]{\imagePath/stereo/potts/venus_left_submod} \\
+\begin{tabular}{cc}
+  \includegraphics[scale = 1.3]{./figures/semantic/2_14_s} &
+  \includegraphics[scale = 0.5]{./figures/semantic/2_14_s_submod} \\
+        \scriptsize (a) & \scriptsize (e) \\
+  \includegraphics[scale = 1.3]{./figures/semantic/11_4_s} &
+  \includegraphics[scale = 0.5]{./figures/semantic/11_4_s_submod} \\
+        \scriptsize (b) & \scriptsize (f) \\
+  \includegraphics[scale = 1.3]{./figures/semantic/12_7_s} &
+  \includegraphics[scale = 0.5]{./figures/semantic/12_7_s_submod} \\
+        \scriptsize (c) & \scriptsize (g) \\
+  \includegraphics[scale = 1.3]{./figures/semantic/4_16_s} &
+  \includegraphics[scale = 0.5]{./figures/semantic/4_16_s_submod} \\
+        \scriptsize (d) & \scriptsize (h) \\
 \end{tabular}
-\mycaption{\footnotesize \em To fill}
-%\label{fig:stereo}
+\mycaption{\footnotesize \em Sample results from semantic segmentation on the
+MSRC-21 dataset using dense CRFs with higher-order diversity term in addition
+to Potts compatibility and Gaussian pairwise potentials. (a)-(d) show the input
+image, and (e)-(f) show the corresponding results using our method. We observe that our
+method is able to segment out objects with complex boundaries fairly
+accurately.}
+\label{fig:semantic}
 \end{figure*}
 
 
@@ -921,8 +935,10 @@ algorithm for 100 iterations.
 \myparagraph{Results} The ground-truth labelings provided with the MSRC-21
 dataset are very coarse. We evaluate our algorithm on the set of 94 images for which fine-grain
 annotations are available \citep{koltun2011efficient}. On this subset, our
-method correctly labeled 81.18\% of pixels. Some representative results are
-shown in figure \ref{}. Our set of hyperparameters for this dataset can be found in the
+method correctly labeled 81.18\% of pixels. It took 275.02s on average per
+instance to run our method for 100 iterations. Some representative results are
+shown in figure \ref{fig:semantic} where we label each pixel with the label
+having the maximum marginal probability. Our set of hyperparameters for this dataset can be found in the
 appendix.
 
 

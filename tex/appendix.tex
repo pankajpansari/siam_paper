@@ -132,6 +132,35 @@ Recall that $\max_{{\bf s} \in EP(F)} \langle {\bf y}, {\bf s} \rangle$ is the v
         \end{equation}
     and the results follows. 
 \end{proof}
+
+\mysection{List of Hyperparameters} 
+
+For pairwise dense CRFs, following \cite{koltun2011efficient}, we use constrast-sensitive two-kernel potentials for both stereo matching and semantic segmentation. These are defined in terms of the color vectors ${I}_a$ and ${I}_b$ and positions $p_a$ and $p_b$ as:
+
+\begin{equation}
+k({\bf f}_a, {\bf f}_b) = w^{(1)}\exp\left(- \frac{|p_a - p_b|^2}{2 \theta_{\alpha}^2} - \frac{|{I}_a - {I}_b|^2}{2 \theta_{\beta}^2}\right) + w^{(2)}\exp\left(- \frac{|p_a - p_b|^2}{2 \theta_{\gamma}^2}\right) 
+\end{equation}
+
+For the higher-order diversity model, we have a clique weight $w_c$ that is the same across all cliques. We give the set of hyperparameters for our experiments in table \ref{tab:hyper}. 
+ 
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+{} &  $w^{(1)}$ & $\theta_{\alpha}$ & $\theta_{\beta}$ &  $w^{(1)}$ & $\theta_{\gamma}$ & $w_c$\\
+\hline
+Stereo matching (dense pairwise, Submod) & 1.64 & 12.99 & 50.84 &  1.51 & 1.10 & 0  \\
+\hline
+Stereo matching (dense pairwise, MF) & 12.43 & 22.38 & 17.26 & 4.59 & 8.75 & 0  \\
+\hline
+Stereo matching (higher-order, Submod) & 12.43 & 22.38 & 17.26 & 4.59 & 8.75 & 10.00 \\
+\hline
+Semantic Segmentation (higher-order, Submod) & 1.00 & 1.00 & 50.84 & 1.51 & 1.10 & 10.00 \\
+\hline
+\end{tabular}
+\caption{List of hyperparameters used in experiments}
+\label{tab:hyper}
+\end{table}
+
 \iffalse
 \section{Additional Experiment Results}
 
