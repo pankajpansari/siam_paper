@@ -783,6 +783,57 @@ alternate extension. Hence the minimisation problem \ref{eq:min_upper_bound}
 has larger domain $EP(F)$ for the optimal extension, thereby resulting in better minima. Figure \ref{fig:syn_plot} also indicates that our algorithm with optimal extension provides similar range of upper bound as TRW, thereby providing empirical justification of our
 method. TRW makes use of the standard LP relaxation \citep{chekuri2004linear} which is tighter than Kleinberg-Tardos relaxation, resulting in better approximation. However, TRW does not scale well with neighborhood size, thereby prohibiting its use in dense CRFs.
 
+\clearpage
+\mysubsection{Stereo Matching using Dense CRFs}
+\label{subsec:stereo}
+\myparagraph{Data} We demonstrate the benefit our algorithm for stereo matching on images extracted from the Middlebury stereo matching dataset \citep{scharstein2001taxonomy}. We use dense CRF models with Potts compatibility term and Gaussian pairwise potentials. The unary terms are obtained using the absolute difference matching function of \citep{scharstein2001taxonomy}. 
+
+\myparagraph{Method} We use the implementation of mean-field algorithm for
+dense CRFs of \citep{koltun2011efficient} as our baseline. For our algorithm,
+we make use of the modified Gaussian filtering implementation for dense CRFs by
+\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
+The step size $\gamma$ at each iteration is selected by doing line search. We
+run our algorithm till 100 iterations, since the visual quality of the solution
+does not show much improvement beyond this point. We run mean-field up to
+convergence, with a threshold of 0.001 for change in KL-divergence. 
+
+\myparagraph{Results} Figure \ref{fig:stereo} shows some example solutions obtained by picking the
+label with maximum marginal probability for each variable for mean-field and
+for our algorithm. We also report the time and energy values of the solution
+for both methods. Though we are not performing MAP estimation, energy values
+give us a quantitative indication of the quality of solutions. For the full set of
+21 image pairs (2006 dataset), the average ratio of the energies of the solutions from our method 
+compared to mean-field is 0.943. The average time ratio is 10.66. We observe that our algorithm results in more natural looking stereo matching results with lower energy values for all images. However, mean-field runs faster than our method for each instance.The set of hyperparameters that we used can be found in the
+appendix.
+
+\mysubsection{Stereo Matching using Higher-order Diversity Model}
+\label{subsec:stereo_hod}
+\myparagraph{Data} Next, we use the higher-order diversity model for stereo
+matching on the Middlebury dataset. A higher-order model is suitable to be used
+for only some images in the dataset, since others have gradually sloping
+surfaces and higher-order cliques will force all pixels on these surfaces to
+take similar disparity values.  We take a dense CRF model with Potts
+compatibility term and Gaussian pairwise potentials, and augment it with
+higher-order diversity term. We obtain higher-order cliques by using super-pixels obtained from the mean-shift algorithm \citep{comaniciu2002mean}.
+
+\myparagraph{Method} We again use the modified Gaussian filtering implementation for dense CRFs by
+\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
+To compute the contribution of the higher-order model, we make use of an
+efficient strategy to reuse computation. Recall that computing the conditional
+gradient coordinates $s^*_{\sigma(i)}$ requires us to obtain differences of the
+nested sets $F(S_i) - F(S_{i - 1})$. We store the clique state at each $i$, and
+this enables us to compute the difference for each coordinate in a constant
+amount of time. In this case, computation of conditional gradient takes
+$\mathcal{O}(cNL)$ where $c$ is the number of higher-order cliques. We ran our
+algorithm for 200 iterations.
+
+\myparagraph{Results} Figure \ref{fig:stereo_hod} shows some example solutions
+obtained by picking the label with maximum marginal probability for each
+variable. We observe that our method gives results that are reasonably close to
+the ground-truth. The set of hyperparameters that we used can be found in the
+appendix.
+
+
 \begin{figure*}
     \centering
 \begin{tabular}{ccc}
@@ -818,28 +869,6 @@ the mean-field algorithm of Koltun and Krahenbuhl \citep{koltun2011efficient}. W
 \label{fig:stereo}
 \end{figure*}
 
-\clearpage
-\mysubsection{Stereo Matching using Dense CRFs}
-\label{subsec:stereo}
-\myparagraph{Data} We demonstrate the benefit our algorithm for stereo matching on images extracted from the Middlebury stereo matching dataset \citep{scharstein2001taxonomy}. We use dense CRF models with Potts compatibility term and Gaussian pairwise potentials. The unary terms are obtained using the absolute difference matching function of \citep{scharstein2001taxonomy}. 
-
-\myparagraph{Method} We use the implementation of mean-field algorithm for
-dense CRFs of \citep{koltun2011efficient} as our baseline. For our algorithm,
-we make use of the modified Gaussian filtering implementation for dense CRFs by
-\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
-The step size $\gamma$ at each iteration is selected by doing line search. We
-run our algorithm till 100 iterations, since the visual quality of the solution
-does not show much improvement beyond this point. We run mean-field up to
-convergence, with a threshold of 0.001 for change in KL-divergence. 
-
-\myparagraph{Results} Figure \ref{fig:stereo} shows some example solutions obtained by picking the
-label with maximum marginal probability for each variable for mean-field and
-for our algorithm. We also report the time and energy values of the solution
-for both methods. Though we are not performing MAP estimation, energy values
-give us a quantitative indication of the quality of solutions. For the full set of
-21 image pairs (2006 dataset), the average ratio of the energies of the solutions from our method 
-compared to mean-field is 0.943. The average time ratio is 10.66. We observe that our algorithm results in more natural looking stereo matching results with lower energy values for all images. However, mean-field runs faster than our method for each instance.The set of hyperparameters that we used can be found in the
-appendix.
 
 
 \begin{figure*}
@@ -865,31 +894,28 @@ appendix.
 \label{fig:stereo_hod}
 \end{figure*}
 
-\mysubsection{Stereo Matching using Higher-order Diversity Model}
-\label{subsec:stereo_hod}
-\myparagraph{Data} Next, we use the higher-order diversity model for stereo
-matching on the Middlebury dataset. A higher-order model is suitable to be used
-for only some images in the dataset, since others have gradually sloping
-surfaces and higher-order cliques will force all pixels on these surfaces to
-take similar disparity values.  We take a dense CRF model with Potts
-compatibility term and Gaussian pairwise potentials, and augment it with
-higher-order diversity term. We obtain higher-order cliques by using super-pixels obtained from the mean-shift algorithm \citep{comaniciu2002mean}.
+\clearpage
 
-\myparagraph{Method} We again use the modified Gaussian filtering implementation for dense CRFs by
-\citep{ajanthan2017efficient} to compute the conditional gradient at each step.
-To compute the contribution of the higher-order model, we make use of an
-efficient strategy to reuse computation. Recall that computing the conditional
-gradient coordinates $s^*_{\sigma(i)}$ requires us to obtain differences of the
-nested sets $F(S_i) - F(S_{i - 1})$. We store the clique state at each $i$, and
-this enables us to compute the difference for each coordinate in a constant
-amount of time. In this case, computation of conditional gradient takes
-$\mathcal{O}(cNL)$ where $c$ is the number of higher-order cliques. We ran our
-algorithm for 200 iterations.
+\mysubsection{Semantic Segmentation using Higher-order Diversity Model}
+\label{subsec:semantic_hod}
+\myparagraph{Data} We evaluate our approach on the task of semantic
+segmentation on the MSRC-21 dataset \citep{shotton2009textonboost}. It consists
+of 591 color images of size 320$\times$213 with corresponding ground truth
+labelings of 21 object classes. We made use of the unary features from the
+\textit{TextonBoost} classifier \citep{shotton2009textonboost}. As for stereo
+matching (subsection \ref{subsec:stereo_hod}), we augment the dense CRF with
+Gaussian pairwise potentials with our higher-order diversity model. Superpixels for higher-order modeling were obtained from the mean-shift algorithm \citep{comaniciu2002mean}.
 
-\myparagraph{Results} Figure \ref{fig:stereo_hod} shows some example solutions
-obtained by picking the label with maximum marginal probability for each
-variable. We observe that our method gives results that are reasonably close to
-the ground-truth. The set of hyperparameters that we used can be found in the
+\myparagraph{Method} As for stereo matching, we used the modified Gaussian filtering implementation \citep{ajanthan2017efficient} for the contribution of the dense pairwise terms to the conditional gradient. We used the same strategy as in subsection \ref{subsec:stereo_hod} to compute the higher-order component of the conditional gradient in $\mathcal{O}(cNL)$ time-complexity. We ran our
+algorithm for 100 iterations.
+
+\myparagraph{Results} The ground-truth labelings provided with the MSRC-21
+dataset are very coarse. We evaluate our algorithm on the set of 94 images for which fine-grain
+annotations are available \citep{koltun2011efficient}. On this subset, our
+method correctly labeled 81.18\% of pixels. It took 275.02s on average per
+instance to run our method for 100 iterations. Some representative results are
+shown in figure \ref{fig:semantic} where we label each pixel with the label
+having the maximum marginal probability. Our set of hyperparameters for this dataset can be found in the
 appendix.
 
 \begin{figure*}
@@ -917,28 +943,6 @@ accurately.}
 \label{fig:semantic}
 \end{figure*}
 
-
-\mysubsection{Semantic Segmentation using Higher-order Diversity Model}
-\label{subsec:semantic_hod}
-\myparagraph{Data} We evaluate our approach on the task of semantic
-segmentation on the MSRC-21 dataset \citep{shotton2009textonboost}. It consists
-of 591 color images of size 320$\times$213 with corresponding ground truth
-labelings of 21 object classes. We made use of the unary features from the
-\textit{TextonBoost} classifier \citep{shotton2009textonboost}. As for stereo
-matching (subsection \ref{subsec:stereo_hod}), we augment the dense CRF with
-Gaussian pairwise potentials with our higher-order diversity model. Superpixels for higher-order modeling were obtained from the mean-shift algorithm \citep{comaniciu2002mean}.
-
-\myparagraph{Method} As for stereo matching, we used the modified Gaussian filtering implementation \citep{ajanthan2017efficient} for the contribution of the dense pairwise terms to the conditional gradient. We used the same strategy as in subsection \ref{subsec:stereo_hod} to compute the higher-order component of the conditional gradient in $\mathcal{O}(cNL)$ time-complexity. We ran our
-algorithm for 100 iterations.
-
-\myparagraph{Results} The ground-truth labelings provided with the MSRC-21
-dataset are very coarse. We evaluate our algorithm on the set of 94 images for which fine-grain
-annotations are available \citep{koltun2011efficient}. On this subset, our
-method correctly labeled 81.18\% of pixels. It took 275.02s on average per
-instance to run our method for 100 iterations. Some representative results are
-shown in figure \ref{fig:semantic} where we label each pixel with the label
-having the maximum marginal probability. Our set of hyperparameters for this dataset can be found in the
-appendix.
 
 
 \mysection{Discussion}
