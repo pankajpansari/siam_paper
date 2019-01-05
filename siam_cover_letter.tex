@@ -1,0 +1,47 @@
+% SIAM Article Template
+\documentclass[review,onefignum,onetabnum]{siamonline171218}
+
+% Information that is shared between the article and the supplement
+% (title and author information, macros, packages, etc.) goes into
+% ex_shared.tex. If there is no supplement, this file can be included
+% directly.
+
+\title{LP-based Submodular Extensions for Marginal Estimation\thanks{Submitted to the editors 5th January, 2019.}}
+
+\author{Pankaj Pansari\thanks{University of Oxford
+  (\email{pankaj@robots.ox.ac.uk}, \email{pawan@robots.ox.ac.uk}).}
+\and Chris Russell\thanks{University of Surrey
+  (\email{crussell@turing.ac.uk}).}
+\and M. Pawan Kumar\footnotemark[2]}
+ 
+\begin{document}
+\maketitle
+
+Dear editors,
+
+We are submitting this paper as an extension of a paper published in the
+proceedings of AISTATS 2018 titled ``Worst-case Optimal Submodular Extensions
+for Marginal Estimation". Both papers focus on deriving submodular
+extensions which affect the accuracy of a particular variational inference
+method for a conditional random field (CRF). The same connection between this
+variational method and linear programming (LP) relaxations of the corresponding
+MAP inference problem is used in both versions. In the conference paper, we
+used this relation to prove the worst-case optimality of a submodular
+extension used in literature for Potts model by connecting it to the tightest
+Potts relaxation. We also extended the method to hierarchical Potts model by
+deriving its worst-case optimal extension. Finally, we provided an efficient
+algorithm that made this variational inference method tractable for dense CRFs.
+
+In this journal version, we extend the use of the variational method to
+higher-order CRFs. We derive an accurate submodular extension for
+a higher-order CRF with diversity-based clique potentials. This potential favours
+labelings that use few number of diverse labels in a clique. For this
+derivation, we make use of an LP relaxation of this higher-order model. The
+tightness property of this relaxation has not been studied in literature, so we
+cannot claim worst-case optimality of the submodular extension for this model.
+
+To show the efficacy of our method for the higher-order diversity model, we
+carried additional experiments for (a) stereo matching, and (b) semantic
+segmentation on the MSRC-21 dataset. For both applications, we used a CRF with
+dense pairwise potential plus the diversity-based higher-order potentials.
+\end{document}
