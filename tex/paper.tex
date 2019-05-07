@@ -524,7 +524,7 @@ considering the Potts model as a star-shaped tree with edge weights as 0.5.
 \begin{equation}
     E({\bf x}) = \sum_{a \in {\mathcal X}} \phi_a(x_a) + \sum_{a \in {\mathcal X}} \sum_{b \in {\mathcal X}, b \neq a} \phi_{ab}(x_a, x_b).
 \end{equation}
-Note that every random variable is a neighbour of every other random variable in a dense CRF. Similar to previous work \citep{koltun2011efficient}, we consider the pairwise potentials to be to be Gaussian, that is, 
+Note that every random variable is a neighbour of every other random variable in a dense CRF. Similar to previous work \citep{koltun2011efficient}, we consider the pairwise potentials to be Gaussian, that is, 
 \begin{align}
     &\phi(i, j) = \mu(i, j) \sum_{m} w^{(m)} k({\bf f}_a^{(m)}, {\bf f}_b^{(m)}), \\
     &k({\bf f}_a^{(m)}, {\bf f}_b^{(m)}) = \exp\left( \frac{- ||{\bf f}_a - {\bf f}_b ||^2}{2} \right).
